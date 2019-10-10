@@ -1,4 +1,4 @@
 Flask
 Flask-WTF
 passlib
-Flask-mysql
+Flask-mysqldb
