@@ -10,6 +10,21 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/create_form")
+def create_form():
+    return "Create a form here"
+
+
+@app.route("/view_forms")
+def view_forms():
+    return "View your forms here"
+
+
+@app.route("/view_form")
+def view_form():
+    return "View a form here"
+
+
 if __name__ == "__main__":
     info = load_database_info()
     if info is None:
