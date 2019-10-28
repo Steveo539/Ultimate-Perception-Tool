@@ -10,15 +10,15 @@ def index():
     return render_template("index.html", title="Index")
 
 
-@app.route("/forms/new")
-def create_form():
-    return render_template("survey/new.html", title="Survey Home")
-
-
 @app.route("/forms/")
 @app.route("/forms/index")
 def view_forms():
     return render_template("survey/index.html", title="Survey Home")
+
+
+@app.route("/forms/new")
+def create_form():
+    return render_template("survey/new.html", title="Create New Survey")
 
 
 @app.route("/forms/view")
