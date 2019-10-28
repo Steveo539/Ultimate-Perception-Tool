@@ -2,7 +2,11 @@
 <html>
     <head>
         <meta charset="UTF-8"/>
-        <title>{{ title }}</title>
+        {% if title %}
+            <title>{{ title }}</title>
+        {% else %}
+            <title>Ultimate Perception Tool</title>
+        {% endif %}}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     </head>
     <body>
