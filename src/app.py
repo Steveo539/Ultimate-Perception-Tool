@@ -23,7 +23,7 @@ def view_forms():
 
 @app.route("/forms/view")
 def view_form():
-    return "View a form here"
+    return render_template("survey/view.html", title="Survey Detail")
 
 
 if __name__ == "__main__":
