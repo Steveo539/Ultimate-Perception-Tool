@@ -1,3 +1,6 @@
+from forms import MainForm
+
+
 def load_database_info():
     info = {}
     try:
@@ -13,3 +16,17 @@ def load_database_info():
     info['db'] = db_config.readline().strip()
     db_config.close()
     return info
+
+
+def get_questions(mysql, form_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM form_%s", [form_id])
+    questions = cur.fetchall()
+    cur.close()
+    return questions
+
+
+def build_form(questions):
+    form = MainForm()
+    #Insert code to build form
+    return form
