@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8"/>
-        {% if title %}
-            <title>{{ title }}</title>
-        {% else %}
-            <title>Ultimate Perception Tool</title>
-        {% endif %}
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    </head>
-    <body>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <div class="container">
-            {% block body %} {% endblock %}
+<head>
+    <meta charset="UTF-8"/>
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Ultimate Perception Tool</title>
+    {% endif %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+
+<div class="App">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"><a href="/" class="navbar-brand"><img
+            src="{{ url_for('static', filename='images/ultimate_software.png') }}" width="110"></a>
+        <button aria-controls="basic-navbar-nav" type="button" aria-label="Toggle navigation"
+                class="navbar-toggler collapsed"><span class="navbar-toggler-icon"></span></button>
+        <div class="navbar-collapse collapse" id="basic-navbar-nav">
+            <div class="mr-auto navbar-nav"></div>
+            <form class="form-inline">
+                <div class="dropleft">
+                    <button aria-haspopup="true" aria-expanded="false" id="dropdown-basic" type="button"
+                            class="dropdown-toggle btn btn-primary">John Doe
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-basic">
+                        <a href="{{ url_for('index') }}" class="dropdown-item">Home</a>
+                        <a href="{{ url_for('view_forms') }}" class="dropdown-item">My Surveys</a>
+                        <a href="{{ url_for('create_form') }}" class="dropdown-item">Create Survey</a>
+                        <a href="{{ url_for('view_form') }}" class="dropdown-item">Take Survey</a>
+                    </div>
+                </div>
+            </form>
         </div>
-    </body>
+    </nav>
+</div>
+
+<div class="container">
+    {% block body %} {% endblock %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
 </html>
