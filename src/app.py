@@ -13,7 +13,10 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
+
+    HAVE_NOT_FIXED_DATABASE_YET = True
+
+    if request.method == "POST" and not HAVE_NOT_FIXED_DATABASE_YET:
         username = request.form["username"]
         pass_candidate = request.form["password"]
         cur = mysql.connection.cursor()
