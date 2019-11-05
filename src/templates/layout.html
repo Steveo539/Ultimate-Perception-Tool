@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8"/>
-        {% if title %}
-            <title>{{ title }}</title>
-        {% else %}
-            <title>Ultimate Perception Tool</title>
-        {% endif %}
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    </head>
-    <body>
-        <div class="navbar">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
-            <a href="{{ url_for('view_forms') }}" class="btn btn-primary">My Surveys</a>
-            <a href="{{ url_for('create_form') }}" class="btn btn-primary">Create Survey</a>
-            <a href="{{ url_for('view_form') }}" class="btn btn-primary">Take Survey</a>
-        </div>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Ultimate Perception Tool</title>
+    {% endif %}
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/material_colors.css') }}">
 
 
-        <div class="container">
-            {% block body %} {% endblock %}
-        </div>
+</head>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    </body>
+<body>
+
+{% include 'partial/_navbar.html' %}
+
+<div class="container">
+    {% block body %} {% endblock %}
+</div>
+
+{% include 'partial/_scripts.html' %}
+
+</body>
+
 </html>

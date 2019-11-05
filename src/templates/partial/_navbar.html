@@ -1,0 +1,22 @@
+<div class="Navigation">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a href="/" class="navbar-brand">
+            <img src="{{ url_for('static', filename='images/ultimate_software.png') }}" width="110">
+        </a>
+        <div class="mr-auto navbar-nav"></div>
+        <div class="btn-group">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
+            <a href="{{ url_for('create_form') }}" class="btn btn-primary">Create Survey</a>
+            <a href="{{ url_for('view_form') }}" class="btn btn-primary">Take Survey</a>
+            <a href="{{ url_for('view_forms') }}" class="btn btn-primary">My Surveys</a>
+            <a href="/">
+                <button type="button" class="btn btn-primary bmd-btn-icon">
+                    <i class="material-icons">person</i>
+                </button>
+            </a>
+
+        </div>
+    </nav>
+
+</div>
