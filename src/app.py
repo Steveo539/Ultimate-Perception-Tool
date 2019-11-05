@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session
 from utility import *
 from flask_mysqldb import MySQL
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 
@@ -8,6 +9,31 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template("index.html", title="Index")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        pass_candidate = request.form["password"]
+        cur = mysql.connection.cursor()
+        res = cur.execute("SELECT * FROM users WHERE username=%s", [username])
+        cur.close()
+        if res > 0:
+            user = cur.fetchone()
+            password = user['password']
+
+            if sha256_crypt.verify(pass_candidate, password):
+                session['logged_in'] = True
+                session['username'] = user['username']
+            else:
+                error = "Invalid User or Password"
+                return render_template("login.html", error=error)
+        else:
+            error = "Invalid User or Password"
+            return render_template("login.html", error=error)
+    else:
+        return render_template("login.html")
 
 
 @app.route("/forms/")
