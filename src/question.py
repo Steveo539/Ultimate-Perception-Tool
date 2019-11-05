@@ -1,33 +1,33 @@
 class Question:
-    def __init__(self, type, title):
+    def __init__(self, type, text):
         self.type = type
-        self.title = title
+        self.text = text
         # TODO: link with database to create unique question id
-        self.question_id = 0
+        self.id = 0
 
     def set_title(self, title):
-        self.title = title
+        self.text = title
 
     def get_title(self):
-        return self.title
+        return self.text
 
     def get_type(self):
         return self.type
 
     def get_id(self):
-        return self.question_id
+        return self.id
 
 
 class MultipleChoice(Question):
-    def __init__(self, title, choices):
-        super().__init__("Multiple Choice", title)
-        self.choices = choices
+    def __init__(self, text, choices):
+        super().__init__("Multiple Choice", text)
+        self.option = choices
 
     def set_choice(self, choices):
-        self.choices = choices
+        self.option = choices
 
     def add_choice(self, choice):
-        self.choices.append(choice)
+        self.option.append(choice)
 
 
 class ShortAnswer(Question):
