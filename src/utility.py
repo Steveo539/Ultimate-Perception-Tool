@@ -1,3 +1,6 @@
+import json
+
+
 def load_database_info():
     info = {}
     try:
@@ -13,3 +16,11 @@ def load_database_info():
     info['db'] = db_config.readline().strip()
     db_config.close()
     return info
+
+
+def list_to_string(l):
+    return json.dumps(l)
+
+
+def string_to_list(s):
+    return json.loads(s)

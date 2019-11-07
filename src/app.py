@@ -3,13 +3,17 @@ from utility import *
 from flask_mysqldb import MySQL
 from passlib.hash import sha256_crypt
 from access import *
+from database_functions import *
+from forms import MainForm
+from form_functions import build_form
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", title="Index")
+    return render_template("index.html")
+
 
 # Table sql line: CREATE TABLE users(id INT(12) AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))
 # Creates a test user with username: manager and password: test
@@ -27,6 +31,25 @@ def create_user():
         mysql.connection.commit()
         cur.close()
         return "Created user"
+
+
+@app.route("/gen_form")
+def gen_form():
+    cur = mysql.connection.cursor()
+    res = cur.execute("SHOW TABLES LIKE \'form_1\'")
+    if res < 1:
+        print("Creating test form table...")
+        cur.execute("CREATE TABLE form_1(id INT(12) AUTO_INCREMENT PRIMARY KEY, type VARCHAR(25), text VARCHAR(100), options VARCHAR(200))")
+        mysql.connection.commit()
+
+    question_1 = {"text": "What is your favorite color?", "type": "string", "options": ""}
+    question_2 = {"text": "What is your favorite letter?", "type": "radio", "options": [("a","a"),("b","b"),("c","c"),("d","d")]}
+    question_3 = {"text": "What is the magic word?", "type": "string", "options": ""}
+    add_question(mysql, 1, question_1)
+    add_question(mysql, 1, question_2)
+    add_question(mysql, 1, question_3)
+    cur.close()
+    return "Added questions"
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -71,7 +94,7 @@ def view_forms():
     return render_template("survey/index.html", title="Survey Home")
 
 
-@app.route("/forms/new")
+@app.route("/forms/new", methods=["GET", "POST"])
 @is_logged_in
 def create_form():
     return render_template("survey/new.html", title="Create New Survey")
@@ -80,7 +103,9 @@ def create_form():
 @app.route("/forms/view")
 @is_logged_in
 def view_form():
-    return render_template("survey/view.html", title="Survey Detail")
+    questions = get_questions(mysql, 1)
+    form = build_form(questions)
+    return render_template("survey/view.html", title="Survey Detail", form=form)
 
 
 @app.before_first_request
@@ -92,6 +117,7 @@ def create_tables():
         cur.execute("CREATE TABLE users(id INT(12) AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))")
         mysql.connection.commit()
     cur.close()
+
 
 if __name__ == "__main__":
     info = load_database_info()

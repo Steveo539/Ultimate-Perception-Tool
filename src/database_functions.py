@@ -1,3 +1,6 @@
+from utility import *
+
+
 def get_questions(mysql, form_id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM form_%s", [form_id])
@@ -9,8 +12,8 @@ def get_questions(mysql, form_id):
 def add_question(mysql, form_id, question):
     cur = mysql.connection.cursor()
     statement = "INSERT INTO form_" + str(form_id)
-    statement += "(id, type, text, options) VALUES(%s, %s, %s, %s)"
-    cur.execute(statement, (question.id, question.type, question.text, question.options))
+    statement += "(type, text, options) VALUES(%s, %s, %s)"
+    cur.execute(statement, (question['type'], question['text'], list_to_string(question['options'])))
     mysql.connection.commit()
     cur.close()
 
