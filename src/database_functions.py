@@ -1,4 +1,4 @@
-from utility import *
+from src.utility import list_to_string
 
 
 def get_questions(mysql, form_id):

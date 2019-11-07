@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from utility import *
 from flask_mysqldb import MySQL
-from passlib.hash import sha256_crypt
-from access import *
-from database_functions import *
-from forms import MainForm
-from form_functions import build_form
+from passlib.handlers.sha2_crypt import sha256_crypt
 
-app = Flask(__name__)
+from src.access import is_logged_in, is_logged_out
+from src.database_functions import get_questions, add_question
+from src.form_functions import build_form
+from src.utility import load_database_info
+
+app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
 
 @app.route("/")
@@ -71,13 +71,13 @@ def login():
                 return redirect(url_for("index"))
             else:
                 error = "Invalid User or Password"
-                return render_template("login.html", error=error)
+                return render_template("authentication/login.html", error=error)
         else:
             cur.close()
             error = "Invalid User or Password"
-            return render_template("login.html", error=error)
+            return render_template("authentication/login.html", error=error)
     else:
-        return render_template("login.html")
+        return render_template("authentication/login.html")
 
 
 @app.route("/logout")
