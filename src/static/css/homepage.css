@@ -1,0 +1,37 @@
+.homepage-bg-image {
+    min-height: 100vh;
+    /* Note: This image was found on google with no restrictions on redistribution and use even for commercial */
+    background: url('../images/homepage_bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.homepage-overlay {
+    position: absolute;
+    min-height: 100vh;
+    min-width: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.description {
+    left: 50%;
+    position: absolute;
+    top: 45%;
+    transform: translate(-50%, -55%);
+    text-align: center;
+}
+
+.description h1 {
+    color: #6ab446;
+    size: 3em;
+}
+
+.description p {
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1.5;
+}

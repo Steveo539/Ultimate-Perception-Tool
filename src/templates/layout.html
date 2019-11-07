@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/material_colors.css') }}">
 
+    {% block styles %}
+        {# Custom per-page styles can be included here. #}
+    {% endblock %}
+
 
 </head>
 
