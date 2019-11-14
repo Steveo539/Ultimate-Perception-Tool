@@ -90,7 +90,8 @@ def logout():
 @app.route("/forms/")
 @app.route("/forms/index")
 @is_logged_in
-def view_forms():
+def view_library():
+    results = {"Survey1": "SurveyID"}
     return render_template("survey/index.html", title="Survey Home")
 
 
