@@ -59,19 +59,6 @@ def build_selects(questions):
     return selects
 
 
-# def purge_unused_fields(form):
-#     if form.strings.entries[0].string.label == "Placeholder":
-#         del form.strings
-#     if form.integers.entries[0].integer.label == "Placeholder":
-#         del form.integers
-#     if form.decimals.entries[0].decimal.label == "Placeholder":
-#         del form.decimals
-#     if form.radios.entries[0].radio.label == "Placeholder":
-#         del form.radios
-#     if form.selects.entries[0].select.label == "Placeholder":
-#         del form.selects
-#     return form
-
 def purge_unused_fields(form):
     if len(form.strings.entries) < 1:
         del form.strings
