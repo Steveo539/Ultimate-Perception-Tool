@@ -9,6 +9,7 @@
             <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
             {% if session.logged_in %}
             <a href="{{ url_for('create_form') }}" class="btn btn-primary">Create Survey</a>
+            <a href="{{ url_for('view_form') }}" class="btn btn-primary">Take Survey</a>
             <a href="{{ url_for('view_library') }}" class="btn btn-primary">My Surveys</a>
             <a href="{{url_for('logout')}}">
                 <button type="button" class="btn btn-primary bmd-btn-icon">
