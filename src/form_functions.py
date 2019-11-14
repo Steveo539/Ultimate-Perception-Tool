@@ -1,5 +1,5 @@
-from forms import *
-from utility import *
+from src.forms import MainForm, SelectForm, RadioForm, DecimalForm, IntegerForm, StringForm
+from src.utility import string_to_list
 
 
 def build_strings(questions):
