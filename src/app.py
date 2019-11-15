@@ -99,7 +99,6 @@ def view_library():
     manager_surveys = {}
     if result > 0:
         manager_surveys = cur.fetchmany()
-    print(manager_surveys)
     return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
