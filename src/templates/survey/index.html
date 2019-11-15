@@ -6,9 +6,9 @@
         <h1>All Created Surveys</h1>
         <br/>
         {% if surveys %}
-            {% for survey_id in surveys %}
-                Survey Number {{ survey_id }}:
-                <a href="{{ url_for('view_form', form_id=survey_id) }}" class="btn btn-primary">View</a>
+            {% for survey in surveys %}
+                {{ survey['name'] }}:
+                <a href="{{ url_for('view_form', form_id=survey['id']) }}" class="btn btn-primary btn-raised">View</a>
                 <hr>
             {% endfor %}
         {% else %}

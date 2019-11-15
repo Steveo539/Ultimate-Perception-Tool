@@ -95,9 +95,12 @@ def logout():
 def view_library():
     cur = mysql.connection.cursor()
     manager_id = session['user_id']
-    manager_surveys = cur.execute("SELECT id,name FROM surveys WHERE employee_id=%s", [manager_id])
+    result = cur.execute("SELECT name,id FROM surveys WHERE employee_id=%s", [str(manager_id)])
+    manager_surveys = {}
+    if result > 0:
+        manager_surveys = cur.fetchmany()
     print(manager_surveys)
-    return render_template("survey/index.html", title="Survey Home", surveys=[manager_surveys])
+    return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
 @app.route("/forms/new", methods=["GET", "POST"])
