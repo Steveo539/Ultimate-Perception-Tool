@@ -1,10 +1,18 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<br/>
-<div class="jumbotron text-center">
-    <h1>All Created Surveys</h1>
     <br/>
-    <p>List of surveys manager has created will populate here.</p>
-</div>
+    <div class="jumbotron text-center">
+        <h1>All Created Surveys</h1>
+        <br/>
+        {% if surveys %}
+            {% for survey_id in surveys %}
+                Survey Number {{ survey_id }}:
+                <a href="{{ url_for('view_form', form_id=survey_id) }}" class="btn btn-primary">View</a>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>You have no surveys...</p>
+        {% endif %}
+    </div>
 {% endblock %}
