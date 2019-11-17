@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_mysqldb import MySQL
 from passlib.handlers.sha2_crypt import sha256_crypt
+from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
 from src.database_functions import get_questions, add_question
 from src.form_functions import build_form
-from src.utility import load_database_info
+from src.utility import load_database_info, check_unique_user
+from src.forms import RegisterForm
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -13,24 +15,6 @@ app = Flask(__name__, static_url_path='', static_folder='static/', template_fold
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-# Table sql line: CREATE TABLE users(id INT(12) AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))
-# Creates a test user with username: manager and password: test
-@app.route("/gen_user")
-def create_user():
-    cur = mysql.connection.cursor()
-    res = cur.execute("SELECT * FROM users WHERE username=%s", ["manager"])
-    if res > 0:
-        cur.close()
-        return "Already created user"
-    else:
-        username = "manager"
-        password = sha256_crypt.encrypt("test")
-        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (username, password))
-        mysql.connection.commit()
-        cur.close()
-        return "Created user"
 
 
 @app.route("/gen_form")
@@ -50,6 +34,30 @@ def gen_form():
     add_question(mysql, 1, question_3)
     cur.close()
     return "Added questions"
+
+
+@app.route("/register", methods=["GET", "POST"])
+@is_logged_out
+def register():
+    form = RegisterForm()
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        username = form.username.data
+        email = form.email.data
+        position = form.position.data
+        password = sha256_crypt.encrypt(str(form.password.data))
+        date_started = datetime.now().strftime("%m/%d/%Y")
+
+        if check_unique_user(username, email, mysql):
+            return render_template("authentication/register.html", form=form)
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", (name, username, password, position, email, date_started))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for("index"))
+
+    return render_template("authentication/register.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -114,7 +122,7 @@ def create_tables():
     res = cur.execute("SHOW TABLES LIKE \'users\'")
     if res < 1:
         print("Creating user table...")
-        cur.execute("CREATE TABLE users(id INT(12) AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))")
+        cur.execute("CREATE TABLE users(id INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20))")
         mysql.connection.commit()
     cur.close()
 

@@ -2,7 +2,7 @@
 
 {% block body %}
 <br/>
-<div class="jumbotron text-center">
+<div class="container jumbotron text-center">
     <h1>Login</h1>
     <form method="POST" action="">
         <div class="form-group">
@@ -15,6 +15,7 @@
         </div>
         <p>
             <input type="submit" class="btn btn-primary" value="Submit">
+            <a href="{{ url_for('index') }}" class="btn btn-danger">Go Back</a>
         </p>
     </form>
 </div>
