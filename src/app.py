@@ -62,13 +62,19 @@ def register():
         email = form.email.data
         position = form.position.data
         password = sha256_crypt.encrypt(str(form.password.data))
+        company = form.company.data
         date_started = datetime.now().strftime("%m/%d/%Y")
 
         if check_unique_user(username, email, mysql):
             return render_template("authentication/register.html", form=form)
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", (name, username, password, position, email, date_started))
+
+        res = cur.execute("SELECT * FROM companies WHERE companyID=%s", [company])
+        if res < 1:
+            return render_template("authentication/register.html", form=form)
+
+        cur.execute("INSERT INTO users(companyID, name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s, %s)", (company, name, username, password, position, email, date_started))
         mysql.connection.commit()
         cur.close()
         return redirect(url_for("index"))
@@ -135,10 +141,15 @@ def view_form():
 @app.before_first_request
 def create_tables():
     cur = mysql.connection.cursor()
+    res = cur.execute("SHOW TABLES LIKE \'companies\'")
+    if res < 1:
+        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
+        mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'users\'")
     if res < 1:
         print("Creating user table...")
-        cur.execute("CREATE TABLE users(id INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20))")
+        #cur.execute("CREATE TABLE users(id INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20))")
+        cur.execute("CREATE TABLE users(companyID INT(18), ID INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20), FOREIGN KEY (companyID) REFERENCES companies(companyID))")
         mysql.connection.commit()
     cur.close()
 

@@ -7,6 +7,7 @@ class RegisterForm(FlaskForm):
     username = StringField("Username", [validators.Length(min=4, max=29)])
     email = StringField("Email", [validators.Length(min=6, max=99), validators.email(message="Must be a valid email")])
     position = StringField("Position Title", [validators.length(min=1, max=99)])
+    company = IntegerField("Company ID", [validators.DataRequired(message="Enter your company ID")])
     password = PasswordField("Password", [validators.DataRequired(), validators.EqualTo("confirm", message="Passwords don't match"), validators.Length(min=5, max=50)])
     confirm = PasswordField("Confirm Password", [validators.DataRequired()])
 
