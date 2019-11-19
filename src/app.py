@@ -17,6 +17,22 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/gen_user")
+@is_logged_out
+def gen_user():
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM users WHERE username=%s", ["manager"])
+    if res > 0:
+        cur.close()
+        return "Account already exists, login with username: manager and password: test1"
+    else:
+        password = sha256_crypt.encrypt("test1")
+        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", ("manager", "manager", password, "Manager", "manager@email.com", "1/1/1970"))
+        mysql.connection.commit()
+        cur.close()
+        return "Account Created with username: manager and password: test1"
+
+
 @app.route("/gen_form")
 def gen_form():
     cur = mysql.connection.cursor()
