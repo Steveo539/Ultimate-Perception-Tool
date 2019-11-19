@@ -143,12 +143,12 @@ def create_tables():
     cur = mysql.connection.cursor()
     res = cur.execute("SHOW TABLES LIKE \'companies\'")
     if res < 1:
+        print("Creating company table...")
         cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'users\'")
     if res < 1:
         print("Creating user table...")
-        #cur.execute("CREATE TABLE users(id INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20))")
         cur.execute("CREATE TABLE users(companyID INT(18), ID INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20), FOREIGN KEY (companyID) REFERENCES companies(companyID))")
         mysql.connection.commit()
     cur.close()
