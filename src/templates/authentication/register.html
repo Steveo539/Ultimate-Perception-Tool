@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 
 {% macro render_field(field) %}
-    <dt>{{ field.label }}
     <dd>{{ field(**kwargs)|safe }}
         {% if field.errors %}
             <ul class=errors>
@@ -27,47 +26,40 @@
 
         <form method="POST" action="">
             {{ form.csrf_token }}
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">First Name</label>
-                        <input type="text" class="form-control" name="username">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">Last Name</label>
-                        <input type="text" class="form-control" name="username">
-                    </div>
-                </div>
+            <div class="form-group">
+                <label class="bmd-label-floating">Name</label>
+                {{ render_field(form.name, class_="form-control", type_="text") }}
             </div>
-
             <div class="form-group">
                 <label class="bmd-label-floating">Username</label>
-                <input type="text" class="form-control" name="username">
+                {{ render_field(form.username, class_="form-control") }}
             </div>
 
             <div class="form-group">
                 <label class="bmd-label-floating">Email</label>
-                <input type="text" class="form-control" name="username">
+                {{ render_field(form.email, class_="form-control") }}
             </div>
 
             <div class="form-group">
                 <label class="bmd-label-floating">Position Title</label>
-                <input type="text" class="form-control" name="username">
+                {{ render_field(form.position, class_="form-control") }}
             </div>
 
+            <div class="form-group">
+                <label class="bmd-label-floating">Company ID</label>
+                {{ render_field(form.company, class_="form-control") }}
+            </div>
             <div class="row">
                 <div class="col">
                     <div class="form-group">
                         <label class="bmd-label-floating">Password</label>
-                        <input type="password" class="form-control" name="username">
+                        {{ render_field(form.password, class_="form-control") }}
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label class="bmd-label-floating">Confirm password</label>
-                        <input type="password" class="form-control" name="username">
+                        {{ render_field(form.confirm, class_="form-control") }}
                     </div>
                 </div>
             </div>
