@@ -32,3 +32,43 @@ def check_unique_user(username, email, mysql):
     res2 = cur.execute('SELECT * FROM users WHERE email = %s', [email])
     cur.close()
     return res1 > 0 or res2 > 0
+
+
+def create_tables(mysql):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SHOW TABLES LIKE \'companies\'")
+    if res < 1:
+        print("Creating company table...")
+        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
+        mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'users\'")
+    if res < 1:
+        print("Creating user table...")
+        cur.execute(
+            "CREATE TABLE users(companyID INT(18), ID INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20), FOREIGN KEY (companyID) REFERENCES companies(companyID))")
+        mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'surveys\'")
+    if res < 1:
+        print("Creating survey table...")
+        cur.execute(
+            "CREATE TABLE surveys(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyName VARCHAR(100), userID INT(18), FOREIGN KEY (userID) REFERENCES users(ID))")
+        mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'questions\'")
+    if res < 1:
+        print("Creating questions table...")
+        cur.execute(
+            "CREATE TABLE questions(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyID INT(18), questionTitle VARCHAR(100), questionType VARCHAR(100), questionOptions VARCHAR(100), FOREIGN KEY(surveyID) REFERENCES surveys(ID))")
+        mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'emails\'")
+    if res < 1:
+        print("Creating email table...")
+        cur.execute(
+            "CREATE TABLE emails(ID INT(18) PRIMARY KEY, name VARCHAR(100), email VARCHAR(100), FOREIGN KEY (ID) REFERENCES users(ID))")
+        mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'responses\'")
+    if res < 1:
+        print("Creating response table...")
+        cur.execute(
+            "CREATE TABLE responses(ID INT(18) AUTO_INCREMENT PRIMARY KEY, questionID INT(18), response VARCHAR(500), FOREIGN KEY (questionID) REFERENCES questions(ID))")
+        mysql.connection.commit()
+    cur.close()

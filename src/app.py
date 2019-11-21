@@ -6,7 +6,7 @@ from datetime import datetime
 from src.access import is_logged_in, is_logged_out
 from src.database_functions import get_questions, add_question
 from src.form_functions import build_form
-from src.utility import load_database_info, check_unique_user
+from src.utility import load_database_info, check_unique_user, create_tables
 from src.forms import RegisterForm
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
@@ -139,19 +139,8 @@ def view_form():
 
 
 @app.before_first_request
-def create_tables():
-    cur = mysql.connection.cursor()
-    res = cur.execute("SHOW TABLES LIKE \'companies\'")
-    if res < 1:
-        print("Creating company table...")
-        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
-        mysql.connection.commit()
-    res = cur.execute("SHOW TABLES LIKE \'users\'")
-    if res < 1:
-        print("Creating user table...")
-        cur.execute("CREATE TABLE users(companyID INT(18), ID INT(18) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), username VARCHAR(30), password VARCHAR(100), positionTitle VARCHAR(100), email VARCHAR(100), startDate VARCHAR(20), FOREIGN KEY (companyID) REFERENCES companies(companyID))")
-        mysql.connection.commit()
-    cur.close()
+def handle_setup():
+    create_tables(mysql)
 
 
 if __name__ == "__main__":
