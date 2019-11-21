@@ -1,50 +1,78 @@
 {% extends 'layout.html' %}
 
 {% macro render_field(field) %}
-  <dt>{{ field.label }}
-  <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
+    <dt>{{ field.label }}
+    <dd>{{ field(**kwargs)|safe }}
+        {% if field.errors %}
+            <ul class=errors>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </dd>
 {% endmacro %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/thing.css') }}">
+{% endblock %}
 
 {% block body %}
-<br/>
-<div class="container jumbotron text-center">
-    <h1>Register</h1>
-    <form method="POST" action="">
-        {{ form.csrf_token }}
-        <div class="form-group">
-            {{ render_field(form.name, class_="form-control") }}
+    <br/>
+    <div class="form-signin">
+        <div class="text-center mb-4">
+            <img class="mb-4" src="{{ url_for('static', filename='images/ultimate_software.png') }}" width="190">
+            <h1 class="h3 mb-3 font-weight-normal">Register</h1>
         </div>
-        <div class="form-group">
-            {{ render_field(form.username, class_="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.email, class_="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.position, class_="form-control") }}
-        </div>
-         <div class="form-group">
-            {{ render_field(form.company, class_="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.password, class_="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.confirm, class_="form-control") }}
-        </div>
-        <p>
-            <input type="submit" class="btn btn-primary" value="Register"/>
-            <a class="btn btn-danger" href="{{url_for('index')}}">Cancel</a>
-        </p>
-    </form>
-</div>
+
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" name="username" placeholder="Name">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" name="username" placeholder="Last Name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" name="username" placeholder="Username">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" name="username" placeholder="Email">
+            </div>
+
+            <div class="form-group">
+                <label>Position Title</label>
+                <input type="text" class="form-control" name="username" placeholder="Position Title">
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" name="username" placeholder="Password">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input type="password" class="form-control" name="username" placeholder="Confirm password">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Register</button>
+            </p>
+        </form>
+    </div>
 {% endblock %}
