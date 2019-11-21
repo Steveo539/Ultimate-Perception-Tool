@@ -2,17 +2,46 @@
 
 {% block body %}
     <br/>
-    <div class="jumbotron text-center">
-        <h1>All Created Surveys</h1>
+    <div class="container">
+        <h1 class="text-center">All Created Surveys</h1>
+
         <br/>
         {% if surveys %}
             {% for survey in surveys %}
+
                 {{ survey['name'] }}:
                 <a href="{{ url_for('view_form', form_id=survey['id']) }}" class="btn btn-primary btn-raised">View</a>
                 <hr>
             {% endfor %}
         {% else %}
-            <p>You have no surveys...</p>
+            {% for i in range(5) %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Group Project Survey</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec accumsan eu
+                            nisl
+                            quis porta. Praesent malesuada in mauris ac efficitur. Nulla sollicitudin, orci ut blandit
+                            semper, nulla mauris dapibus quam, eu tempor nunc lectus nec tortor. Pellentesque ac ex
+                            semper,
+                            eleifend tortor eget, gravida nibh. Maecenas porta mauris diam, vel consectetur sem
+                            sollicitudin
+                            vitae. Sed non vulputate massa. Cras et dolor vel est egestas ornare non et nibh. Donec
+                            vitae
+                            elit tellus. Integer eleifend, lacus sed aliquam auctor, velit nisl sagittis quam, et
+                            iaculis
+                            elit lectus sit amet sapien. Curabitur sed libero luctus velit gravida tristique. Integer eu
+                            luctus metus, et pulvinar arcu. Curabitur ac diam id tortor porta efficitur. Maecenas
+                            gravida
+                            convallis elit at mollis. Etiam ullamcorper, lacus id volutpat blandit, justo est interdum
+                            lectus, efficitur iaculis ex ipsum quis dui.
+                        </p>
+                        <a href="#" class="btn btn-primary">View Survey</a>
+                    </div>
+                </div>
+                <p/>
+            {% endfor %}
         {% endif %}
     </div>
 {% endblock %}
