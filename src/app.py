@@ -125,7 +125,7 @@ def logout():
 def view_library():
     cur = mysql.connection.cursor()
     manager_id = session['user_id']
-    result = cur.execute("SELECT surveyName, surveyID FROM surveys WHERE ID=%s", [str(manager_id)])
+    result = cur.execute("SELECT surveyName, ID FROM surveys WHERE userID=%s", [str(manager_id)])
     manager_surveys = {}
     if result > 0:
         manager_surveys = cur.fetchmany()
