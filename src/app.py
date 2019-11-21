@@ -100,7 +100,7 @@ def login():
             if sha256_crypt.verify(pass_candidate, password):
                 session['logged_in'] = True
                 session['username'] = user['username']
-                session['user_id'] = user['id']
+                session['user_id'] = user['ID']
                 return redirect(url_for("index"))
             else:
                 error = "Invalid User or Password"
@@ -125,7 +125,7 @@ def logout():
 def view_library():
     cur = mysql.connection.cursor()
     manager_id = session['user_id']
-    result = cur.execute("SELECT name,id FROM surveys WHERE employee_id=%s", [str(manager_id)])
+    result = cur.execute("SELECT surveyName, surveyID FROM surveys WHERE ID=%s", [str(manager_id)])
     manager_surveys = {}
     if result > 0:
         manager_surveys = cur.fetchmany()
