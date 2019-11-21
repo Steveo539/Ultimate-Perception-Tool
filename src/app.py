@@ -33,27 +33,6 @@ def gen_user():
         return "Account Created with username: manager and password: test1"
 
 
-@app.route("/gen_form")
-def gen_form():
-    cur = mysql.connection.cursor()
-    res = cur.execute("SHOW TABLES LIKE \'form_1\'")
-    if res < 1:
-        print("Creating test form table...")
-        cur.execute(
-            "CREATE TABLE form_1(id INT(12) AUTO_INCREMENT PRIMARY KEY, type VARCHAR(25), text VARCHAR(100), options VARCHAR(200))")
-        mysql.connection.commit()
-
-    question_1 = {"text": "What is your favorite color?", "type": "string", "options": ""}
-    question_2 = {"text": "What is your favorite letter?", "type": "radio",
-                  "options": [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
-    question_3 = {"text": "What is the magic word?", "type": "string", "options": ""}
-    add_question(mysql, 1, question_1)
-    add_question(mysql, 1, question_2)
-    add_question(mysql, 1, question_3)
-    cur.close()
-    return "Added questions"
-
-
 @app.route("/register", methods=["GET", "POST"])
 @is_logged_out
 def register():
