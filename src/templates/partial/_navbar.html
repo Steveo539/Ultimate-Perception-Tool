@@ -16,11 +16,8 @@
                 </button>
             </a>
             {% else %}
-            <a href="{{url_for('login')}}">
-                <button type="button" class="btn btn-primary bmd-btn-icon">
-                    <i class="material-icons">person</i>
-                </button>
-            </a>
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
             {% endif %}
 
         </div>

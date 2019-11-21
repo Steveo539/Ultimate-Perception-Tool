@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_mysqldb import MySQL
 from passlib.handlers.sha2_crypt import sha256_crypt
+from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
 from src.database_functions import get_questions, add_question
 from src.form_functions import build_form
-from src.utility import load_database_info
+from src.utility import load_database_info, check_unique_user
+from src.forms import RegisterForm
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -15,22 +17,20 @@ def index():
     return render_template("index.html")
 
 
-# Table sql line: CREATE TABLE users(id INT(12) AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))
-# Creates a test user with username: manager and password: test
 @app.route("/gen_user")
-def create_user():
+@is_logged_out
+def gen_user():
     cur = mysql.connection.cursor()
     res = cur.execute("SELECT * FROM users WHERE username=%s", ["manager"])
     if res > 0:
         cur.close()
-        return "Already created user"
+        return "Account already exists, login with username: manager and password: test1"
     else:
-        username = "manager"
-        password = sha256_crypt.encrypt("test")
-        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (username, password))
+        password = sha256_crypt.encrypt("test1")
+        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", ("manager", "manager", password, "Manager", "manager@email.com", "1/1/1970"))
         mysql.connection.commit()
         cur.close()
-        return "Created user"
+        return "Account Created with username: manager and password: test1"
 
 
 @app.route("/gen_form")
@@ -52,6 +52,36 @@ def gen_form():
     add_question(mysql, 1, question_3)
     cur.close()
     return "Added questions"
+
+
+@app.route("/register", methods=["GET", "POST"])
+@is_logged_out
+def register():
+    form = RegisterForm()
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        username = form.username.data
+        email = form.email.data
+        position = form.position.data
+        password = sha256_crypt.encrypt(str(form.password.data))
+        company = form.company.data
+        date_started = datetime.now().strftime("%m/%d/%Y")
+
+        if check_unique_user(username, email, mysql):
+            return render_template("authentication/register.html", form=form)
+
+        cur = mysql.connection.cursor()
+
+        res = cur.execute("SELECT * FROM companies WHERE companyID=%s", [company])
+        if res < 1:
+            return render_template("authentication/register.html", form=form)
+
+        cur.execute("INSERT INTO users(companyID, name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s, %s)", (company, name, username, password, position, email, date_started))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for("index"))
+
+    return render_template("authentication/register.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -121,6 +151,11 @@ def view_form(form_id):
 @app.before_first_request
 def create_tables():
     cur = mysql.connection.cursor()
+    res = cur.execute("SHOW TABLES LIKE \'companies\'")
+    if res < 1:
+        print("Creating company table...")
+        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
+        mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'users\'")
     if res < 1:
         print("Creating user table...")
