@@ -39,11 +39,13 @@ def gen_form():
     res = cur.execute("SHOW TABLES LIKE \'form_1\'")
     if res < 1:
         print("Creating test form table...")
-        cur.execute("CREATE TABLE form_1(id INT(12) AUTO_INCREMENT PRIMARY KEY, type VARCHAR(25), text VARCHAR(100), options VARCHAR(200))")
+        cur.execute(
+            "CREATE TABLE form_1(id INT(12) AUTO_INCREMENT PRIMARY KEY, type VARCHAR(25), text VARCHAR(100), options VARCHAR(200))")
         mysql.connection.commit()
 
     question_1 = {"text": "What is your favorite color?", "type": "string", "options": ""}
-    question_2 = {"text": "What is your favorite letter?", "type": "radio", "options": [("a","a"),("b","b"),("c","c"),("d","d")]}
+    question_2 = {"text": "What is your favorite letter?", "type": "radio",
+                  "options": [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
     question_3 = {"text": "What is the magic word?", "type": "string", "options": ""}
     add_question(mysql, 1, question_1)
     add_question(mysql, 1, question_2)
@@ -98,6 +100,7 @@ def login():
             if sha256_crypt.verify(pass_candidate, password):
                 session['logged_in'] = True
                 session['username'] = user['username']
+                session['user_id'] = user['ID']
                 return redirect(url_for("index"))
             else:
                 error = "Invalid User or Password"
@@ -118,10 +121,15 @@ def logout():
 
 
 @app.route("/forms/")
-@app.route("/forms/index")
 @is_logged_in
-def view_forms():
-    return render_template("survey/index.html", title="Survey Home")
+def view_library():
+    cur = mysql.connection.cursor()
+    manager_id = session['user_id']
+    result = cur.execute("SELECT surveyName, surveyID FROM surveys WHERE ID=%s", [str(manager_id)])
+    manager_surveys = {}
+    if result > 0:
+        manager_surveys = cur.fetchmany()
+    return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
 @app.route("/forms/new", methods=["GET", "POST"])
@@ -130,10 +138,12 @@ def create_form():
     return render_template("survey/new.html", title="Create New Survey")
 
 
-@app.route("/forms/view")
+@app.route("/forms/view/<form_id>")
 @is_logged_in
-def view_form():
-    questions = get_questions(mysql, 1)
+def view_form(form_id):
+    questions = get_questions(mysql, form_id)
+    if len(questions) < 1:
+        return "Invalid Form ID"
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form)
 
