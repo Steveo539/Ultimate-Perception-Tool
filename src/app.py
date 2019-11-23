@@ -4,7 +4,9 @@ from passlib.handlers.sha2_crypt import sha256_crypt
 from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
-from src.database_functions import get_questions, add_question, generate_hash
+
+from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company, generate_hash
+
 from src.form_functions import build_form
 from src.utility import load_database_info, check_unique_user, create_tables
 from src.forms import RegisterForm
@@ -15,22 +17,6 @@ app = Flask(__name__, static_url_path='', static_folder='static/', template_fold
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-@app.route("/gen_user")
-@is_logged_out
-def gen_user():
-    cur = mysql.connection.cursor()
-    res = cur.execute("SELECT * FROM users WHERE username=%s", ["manager"])
-    if res > 0:
-        cur.close()
-        return "Account already exists, login with username: manager and password: test1"
-    else:
-        password = sha256_crypt.encrypt("test1")
-        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", ("manager", "manager", password, "Manager", "manager@email.com", "1/1/1970"))
-        mysql.connection.commit()
-        cur.close()
-        return "Account Created with username: manager and password: test1"
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -47,20 +33,20 @@ def register():
         date_started = datetime.now().strftime("%m/%d/%Y")
 
         if check_unique_user(username, email, mysql):
-            return render_template("authentication/register.html", form=form)
+            return render_template("authentication/register.html", form=form, title="Register")
 
         cur = mysql.connection.cursor()
 
         res = cur.execute("SELECT * FROM companies WHERE companyID=%s", [company])
         if res < 1:
-            return render_template("authentication/register.html", form=form)
+            return render_template("authentication/register.html", form=form, title="Register")
 
         cur.execute("INSERT INTO users(companyID, name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s, %s)", (company, name, username, password, position, email, date_started))
         mysql.connection.commit()
         cur.close()
         return redirect(url_for("index"))
 
-    return render_template("authentication/register.html", form=form)
+    return render_template("authentication/register.html", form=form, title="Register")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -83,13 +69,13 @@ def login():
                 return redirect(url_for("index"))
             else:
                 error = "Invalid User or Password"
-                return render_template("authentication/login.html", error=error)
+                return render_template("authentication/login.html", error=error, title="Sign In")
         else:
             cur.close()
             error = "Invalid User or Password"
-            return render_template("authentication/login.html", error=error)
+            return render_template("authentication/login.html", error=error, title="Sign In")
     else:
-        return render_template("authentication/login.html")
+        return render_template("authentication/login.html", title="Sign In")
 
 
 @app.route("/logout")
@@ -97,6 +83,24 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+
+@app.route("/manage/companies", methods=["GET", "POST"])
+@is_logged_in
+def manage_companies():
+    if session['username'] != "admin":
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        if "delete_company" in request.form:
+            company = request.form["delete_company"]
+            delete_company(mysql, company)
+        elif "add_company" in request.form:
+            company = request.form["company_name"]
+            if len(company) > 2:
+                add_company(mysql, company)
+
+    return render_template("management/companies.html", title="Manage Companies", companies=get_companies(mysql))
 
 
 @app.route("/forms/")
@@ -130,6 +134,7 @@ def view_form(form_id):
 @app.before_first_request
 def handle_setup():
     create_tables(mysql)
+    create_admin(mysql)
 
 
 if __name__ == "__main__":

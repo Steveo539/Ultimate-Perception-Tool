@@ -39,7 +39,7 @@ def create_tables(mysql):
     res = cur.execute("SHOW TABLES LIKE \'companies\'")
     if res < 1:
         print("Creating company table...")
-        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY, companyName VARCHAR(100))")
+        cur.execute("CREATE TABLE companies(companyID INT(12) PRIMARY KEY AUTO_INCREMENT, companyName VARCHAR(100))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'users\'")
     if res < 1:

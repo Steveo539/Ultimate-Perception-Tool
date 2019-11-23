@@ -1,7 +1,9 @@
 import MySQLdb
 import uuid
+from passlib.handlers.sha2_crypt import sha256_crypt
 
 from src.utility import list_to_string
+
 
 
 def get_questions(mysql, form_id):
@@ -46,3 +48,36 @@ def generate_hash(mysql, survey):
     mysql.connection.commit()
     cur.close()
     return link_hash
+
+def create_admin(mysql):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM users WHERE username=%s", ["admin"])
+    if res < 1:
+        print("Creating admin account...")
+        password = sha256_crypt.encrypt("password1")
+        cur.execute("INSERT INTO users(name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s)", ("admin", "admin", password, "Admin", "admin@email.com", "1/1/1970"))
+        mysql.connection.commit()
+    cur.close()
+
+
+def get_companies(mysql):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM companies")
+    companies = cur.fetchall()
+    cur.close()
+    return companies
+
+
+def delete_company(mysql, company):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM users WHERE companyID=%s", [company])
+    cur.execute("DELETE FROM companies WHERE companyID=%s", [company])
+    mysql.connection.commit()
+    cur.close()
+
+
+def add_company(mysql, company):
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO companies(companyName) VALUES(%s)", [company])
+    mysql.connection.commit()
+    cur.close()
