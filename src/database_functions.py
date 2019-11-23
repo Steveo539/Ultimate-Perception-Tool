@@ -5,7 +5,6 @@ from passlib.handlers.sha2_crypt import sha256_crypt
 from src.utility import list_to_string
 
 
-
 def get_questions(mysql, form_id):
     try:
         form_id = int(form_id)
@@ -48,6 +47,7 @@ def generate_hash(mysql, survey):
     mysql.connection.commit()
     cur.close()
     return link_hash
+
 
 def create_admin(mysql):
     cur = mysql.connection.cursor()

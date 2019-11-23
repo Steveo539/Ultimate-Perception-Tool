@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
 
-from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company, generate_hash
+from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company
 
 from src.form_functions import build_form
 from src.utility import load_database_info, check_unique_user, create_tables
