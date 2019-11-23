@@ -71,4 +71,9 @@ def create_tables(mysql):
         cur.execute(
             "CREATE TABLE responses(ID INT(18) AUTO_INCREMENT PRIMARY KEY, questionID INT(18), response VARCHAR(500), FOREIGN KEY (questionID) REFERENCES questions(ID))")
         mysql.connection.commit()
+    res = cur.execute("SHOW TABLES LIKE \'hashes\'")
+    if res < 1:
+        print("Creating hashes table...")
+        cur.execute("CREATE TABLE hashes(hash VARCHAR(50) PRIMARY KEY, surveyID INT(18), used BOOLEAN not null default 0, FOREIGN KEY (surveyID) REFERENCES surveys(ID))")
+        mysql.connection.commit()
     cur.close()
