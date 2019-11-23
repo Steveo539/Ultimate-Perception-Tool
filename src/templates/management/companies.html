@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<br/>
+<div class="container jumbotron text-center">
+    <h1>Manage Companies</h1>
+    <hr>
+    <table class="table table-striped">
+        <tr>
+            <th>Company ID</th>
+            <th>Company Name</th>
+            <th>Action</th>
+        </tr>
+        {% for company in companies %}
+            <tr>
+                <td>{{ company.companyID }}</td>
+                <td>{{ company.companyName }}</td>
+                <td>
+                    <form method="POST" action="">
+                        <input type="hidden" name="delete_company" value="{{ company.companyID }}">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br/>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="company_name">Add a Company</label>
+            <input class="form-control" id="company_name" type="text" name="company_name">
+        </div>
+        <input type="hidden" name="add_company">
+        <input type="submit" class="btn btn-primary" value="Add">
+    </form>
+</div>
+{% endblock %}
