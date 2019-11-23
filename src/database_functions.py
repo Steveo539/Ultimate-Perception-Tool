@@ -1,4 +1,5 @@
 import MySQLdb
+import uuid
 
 from src.utility import list_to_string
 
@@ -36,3 +37,12 @@ def remove_question(mysql, form_id, question_id):
     cur.execute(statement, [question_id])
     mysql.connection.commit()
     cur.close()
+
+
+def generate_hash(mysql, survey):
+    link_hash = uuid.uuid1().int
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO hashes(hash, surveyID) VALUES(%s, %s)", (str(link_hash), survey))
+    mysql.connection.commit()
+    cur.close()
+    return link_hash

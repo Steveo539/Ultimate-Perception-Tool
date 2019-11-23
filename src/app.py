@@ -4,7 +4,7 @@ from passlib.handlers.sha2_crypt import sha256_crypt
 from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
-from src.database_functions import get_questions, add_question
+from src.database_functions import get_questions, add_question, generate_hash
 from src.form_functions import build_form
 from src.utility import load_database_info, check_unique_user, create_tables
 from src.forms import RegisterForm
