@@ -115,6 +115,32 @@ def view_library():
     return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
+@app.route("/forms/validate", methods=["GET", "POST"])
+@app.route("/forms/validate/<uuid>", methods=["GET", "POST"])
+@is_logged_in
+def validate_uuid(uuid=-1):
+    """Validates UUID from an employee. If valid will direct employee to the survey associated with the
+    UUID. Otherwise, will redirect employee back to this page with an error message."""
+    error = None
+    if request.method == "POST":
+        uuid_input = request.form["uuid_input"]
+        cur = mysql.connection.cursor()
+        res = cur.execute("SELECT * FROM hashes WHERE hash=%s", [int(uuid_input)])
+        if res > 0:
+            result = cur.fetchone()
+            cur.close()
+            if result['used'] != 0:  # Don't allow used hashes to be used again.
+                error = 'This access key has already been used!'
+            else:
+                return redirect(url_for('view_form', form_id=result['surveyID']))
+        else:
+            error = 'Invalid access key.'
+
+    if uuid != -1:  # If user provided a UUID in URL, autofill the form with it.
+        return render_template("survey/uuid.html", title="Validate Survey Access", uuid=uuid, error=error)
+    return render_template("survey/uuid.html", title="Validate Survey Access", error=error)
+
+
 @app.route("/forms/new", methods=["GET", "POST"])
 @is_logged_in
 def create_form():
