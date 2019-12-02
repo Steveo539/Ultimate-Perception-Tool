@@ -149,8 +149,6 @@ def create_form():
 @is_logged_in
 def view_form(form_id):
     questions = get_questions(mysql, form_id)
-    if len(questions) < 1:
-        return "Invalid Form ID"
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form)
 
