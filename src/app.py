@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
 
-from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company
+from src.database_functions import *
 
 from src.form_functions import build_form
 from src.utility import load_database_info, check_unique_user, create_tables
@@ -17,6 +17,30 @@ app = Flask(__name__, static_url_path='', static_folder='static/', template_fold
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/test_survey")
+def test_survey():
+
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM surveys WHERE ID=%s", [str(1)])
+    if res > 0:
+        cur.close()
+        return "Already created survey"
+    cur.close()
+
+    survey = {"name": "Test 1", "user": "1", "date": "1/14/1970"}
+    create_survey(mysql, survey)
+    question1 = {'text': "What is your favorite color?", 'type': "string", 'options': ""}
+    question2 = {'text': "What is your favorite number?", 'type': "integer", 'options': ""}
+    question3 = {'text': "What is your favorite letter?", 'type': "radio", 'options': [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
+    question4 = {'text': "What is your favorite sport?", 'type': "select", 'options': [("baseball", "baseball"), ("football", "football"), ("basketball", "basketball")]}
+
+    add_question(mysql, 1, question1)
+    add_question(mysql, 1, question2)
+    add_question(mysql, 1, question3)
+    add_question(mysql, 1, question4)
+    return "Created survey"
 
 
 @app.route("/register", methods=["GET", "POST"])
