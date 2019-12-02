@@ -51,7 +51,7 @@ def create_tables(mysql):
     if res < 1:
         print("Creating survey table...")
         cur.execute(
-            "CREATE TABLE surveys(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyName VARCHAR(100), userID INT(18), FOREIGN KEY (userID) REFERENCES users(ID))")
+            "CREATE TABLE surveys(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyName VARCHAR(100), userID INT(18), creationDate VARCHAR(20), FOREIGN KEY (userID) REFERENCES users(ID))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'questions\'")
     if res < 1:
