@@ -6,13 +6,14 @@ from datetime import datetime
 from src.access import is_logged_in, is_logged_out
 
 from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company
+from src.emails import email_user
 
 from src.form_functions import build_form
-from src.utility import load_database_info, check_unique_user, create_tables
+from src.utility import load_database_info, check_unique_user, create_tables, load_email_info
 from src.forms import RegisterForm
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
-
+mysql = None
 
 @app.route("/")
 def index():
@@ -103,6 +104,15 @@ def manage_companies():
     return render_template("management/companies.html", title="Manage Companies", companies=get_companies(mysql))
 
 
+@app.route("/email")
+def test_email():
+    # Will send a test email to the UltimatePerceptionTool@gmail.com account.
+    # DELETE THIS ONCE EMAILS HAVE BEEN FULLY IMPLEMENTED.
+    email_user(2, '123')
+    print('Sent email!')
+    return "Sent."
+
+
 @app.route("/forms/")
 @is_logged_in
 def view_library():
@@ -115,7 +125,7 @@ def view_library():
     return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
-@app.route("/forms/validate", methods=["GET", "POST"])
+@app.route("/forms/validate/", methods=["GET", "POST"])
 @app.route("/forms/validate/<uuid>", methods=["GET", "POST"])
 @is_logged_in
 def validate_uuid(uuid=-1):
@@ -173,6 +183,17 @@ if __name__ == "__main__":
     app.config['MYSQL_PASSWORD'] = info['password']
     app.config['MYSQL_DB'] = info['db']
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+    # Load in email configuration from file. If not provided, app will work, but without email functionality.
+    email_info = load_email_info()
+    if email_info is None:
+        app.config['EMAIL_ENABLED'] = False
+    else:
+        app.config['EMAIL_ENABLED'] = True
+        app.config['EMAIL_HOST'] = email_info['host']
+        app.config['EMAIL_PORT'] = email_info['port']
+        app.config['EMAIL_ACCOUNT'] = email_info['account']
+        app.config['EMAIL_PASSWORD'] = email_info['password']
 
     mysql = MySQL(app)
     app.run(debug=True)
