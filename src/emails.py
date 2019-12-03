@@ -6,34 +6,26 @@ from email.mime.text import MIMEText
 
 from flask import current_app as app
 
-from src.database_functions import user_id_to_name
+from src.database_functions import user_id_to_name, generate_hash
 
 
-def notify_users(mysql, survey_id: int, manager_id: int, employee_list: str):
+def notify_users(mysql, survey_id: int, manager_id: int, employee_list_str: str):
     """Will notify all employees who work under a given manager about a new survey available to take. When the email is
     sent to employees, a unique ID will be given to them such that they are only able to take the survey once. The ID is
      not tied to any specific response. Tracking only if it has been used, and not by who."""
     if not app.config['EMAIL_ENABLED']:  # If email is not enabled, then we don't notify
         return
 
-    # TODO: Get all employees who work under manager. If all_employees is true, then for every employee who is a manager,
-    #  add their employees to the email list too. However, every employee should receive at most 1 email.
-    employees = []  # list of id's for all the email recipients
+    employee_list_str.replace(' ', '')
+    employee_email_list = employee_list_str.split(',')
 
-    # TODO: Generate a unique key for each user who will have to take the survey
-    # TODO: Send an email to each of the users with the unique key
-    keys = {}
-    for employee_id in employees:
-        keys[employee_id] = uuid.uuid4()
-        email_user(mysql, employee_id, int(keys[employee_id]))
-    pass
+    for employee_email in employee_email_list:
+        key_for_employee = generate_hash(mysql, survey_id)
+        email_user(mysql, employee_email, manager_id, key_for_employee)
 
 
-def email_user(mysql, manager_id: int, key: int):
+def email_user(mysql, destination_email: str, manager_id: int, key: int):
     """Helper function to send an email to the user containing the given unique key which links to the survey."""
-
-    user_email = None  # id_to_email(mysql, user_id)  # Fetch user email address
-    destination_email = user_email if user_email else 'UltimatePerceptionTool@gmail.com'  # If exists, send to user
 
     message = generate_email_body(mysql, destination_email, manager_id, key)
 

@@ -110,6 +110,8 @@ def manage_companies():
 def send_survey(survey_id=-1):
     """Validates UUID from an employee. If valid will direct employee to the survey associated with the
     UUID. Otherwise, will redirect employee back to this page with an error message."""
+    if not app.config['EMAIL_ENABLED']:  # If email is not enabled, then we don't notify
+        return "Unable To Complete Action. Email Functionality is not Enabled."
     message = None
     error = None
     if request.method == "POST":
@@ -192,6 +194,11 @@ def view_form(form_id):
 def handle_setup():
     create_tables(mysql)
     create_admin(mysql)
+
+
+@app.context_processor
+def inject_stage_and_region():
+    return dict(email_enabled=app.config['EMAIL_ENABLED'])
 
 
 if __name__ == "__main__":
