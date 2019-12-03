@@ -13,7 +13,7 @@ def get_questions(mysql, form_id):
     cur = mysql.connection.cursor()
 
     try:  # If there is an exception with the query, fail silently
-        cur.execute("SELECT * FROM form_%s", [form_id])
+        cur.execute("SELECT * FROM questions WHERE surveyID=%s", [form_id])
     except (MySQLdb.Error, MySQLdb.Warning):
         return ""
 
@@ -24,18 +24,16 @@ def get_questions(mysql, form_id):
 
 def add_question(mysql, form_id, question):
     cur = mysql.connection.cursor()
-    statement = "INSERT INTO form_" + str(form_id)
-    statement += "(type, text, options) VALUES(%s, %s, %s)"
-    cur.execute(statement, (question['type'], question['text'], list_to_string(question['options'])))
+    statement = "INSERT INTO questions " + str(form_id)
+    statement += "(surveyID, questionTitle, questionType, questionOptions) VALUES(%s, %s, %s)"
+    cur.execute(statement, (form_id, question['text'], question['type'], list_to_string(question['options'])))
     mysql.connection.commit()
     cur.close()
 
 
-def remove_question(mysql, form_id, question_id):
+def remove_question(mysql, form_id: int, question_id: int):
     cur = mysql.connection.cursor()
-    statement = "DELETE FROM form_" + str(form_id)
-    statement += " WHERE id=%s"
-    cur.execute(statement, [question_id])
+    cur.execute('DELETE FROM questions WHERE form_id=%s AND question_id=%s', [form_id, question_id])
     mysql.connection.commit()
     cur.close()
 

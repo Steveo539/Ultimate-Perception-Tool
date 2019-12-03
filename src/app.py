@@ -156,18 +156,21 @@ def validate_uuid(uuid=-1):
     UUID. Otherwise, will redirect employee back to this page with an error message."""
     error = None
     if request.method == "POST":
-        uuid_input = request.form["uuid_input"]
-        cur = mysql.connection.cursor()
-        res = cur.execute("SELECT * FROM hashes WHERE hash=%s", [int(uuid_input)])
-        if res > 0:
-            result = cur.fetchone()
-            cur.close()
-            if result['used'] != 0:  # Don't allow used hashes to be used again.
-                error = 'This access key has already been used!'
+        try:
+            uuid_input = request.form["uuid_input"]
+            cur = mysql.connection.cursor()
+            res = cur.execute("SELECT * FROM hashes WHERE hash=%s", [int(uuid_input)])
+            if res > 0:
+                result = cur.fetchone()
+                cur.close()
+                if result['used'] != 0:  # Don't allow used hashes to be used again.
+                    error = 'This access key has already been used!'
+                else:
+                    return redirect(url_for('view_form', form_id=result['surveyID']))
             else:
-                return redirect(url_for('view_form', form_id=result['surveyID']))
-        else:
-            error = 'Invalid access key.'
+                error = 'Invalid access key.'
+        except ValueError:
+            error = 'Please provide a valid numeric key.'
 
     if uuid != -1:  # If user provided a UUID in URL, autofill the form with it.
         return render_template("survey/uuid.html", title="Validate Survey Access", uuid=uuid, error=error)
@@ -181,11 +184,10 @@ def create_form():
 
 
 @app.route("/forms/view/<form_id>")
-@is_logged_in
 def view_form(form_id):
     questions = get_questions(mysql, form_id)
     if len(questions) < 1:
-        return "Invalid Form ID"
+        return "Invalid Form ID."
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form)
 

@@ -5,10 +5,10 @@ from src.utility import string_to_list
 def build_strings(questions):
     strings = []
     for question in questions:
-        if question["type"] == 'string':
+        if question["questionType"] == 'string':
             entry = StringForm()
-            entry.string.label = question["text"]
-            entry.string.id = question["id"]
+            entry.string.label = question["questionTitle"]
+            entry.string.id = question["questionID"]
             strings.append(entry)
     return strings
 
@@ -16,10 +16,10 @@ def build_strings(questions):
 def build_integers(questions):
     integers = []
     for question in questions:
-        if question["type"] == 'integer':
+        if question["questionType"] == 'integer':
             entry = IntegerForm()
-            entry.integer.label = question["text"]
-            entry.integer.id = question["id"]
+            entry.integer.label = question["questionTitle"]
+            entry.integer.id = question["questionID"]
             integers.append(entry)
     return integers
 
@@ -27,10 +27,10 @@ def build_integers(questions):
 def build_decimals(questions):
     decimals = []
     for question in questions:
-        if question["type"] == 'decimal':
+        if question["questionType"] == 'decimal':
             entry = DecimalForm()
-            entry.decimal.label = question["text"]
-            entry.decimal.id = question["id"]
+            entry.decimal.label = question["questionTitle"]
+            entry.decimal.id = question["questionID"]
             decimals.append(entry)
     return decimals
 
@@ -38,11 +38,11 @@ def build_decimals(questions):
 def build_radios(questions):
     radios = []
     for question in questions:
-        if question["type"] == 'radio':
+        if question["questionType"] == 'radio':
             entry = RadioForm()
-            entry.radio.label = question["text"]
-            entry.radio.id = question["id"]
-            entry.radio.choices = string_to_list(question["options"])
+            entry.radio.label = question["questionTitle"]
+            entry.radio.id = question["questionID"]
+            entry.radio.choices = string_to_list(question["questionOptions"])
             radios.append(entry)
     return radios
 
@@ -50,11 +50,11 @@ def build_radios(questions):
 def build_selects(questions):
     selects = []
     for question in questions:
-        if question["type"] == 'select':
+        if question["questionType"] == 'select':
             entry = SelectForm()
-            entry.select.label = question["text"]
-            entry.select.id = question["id"]
-            entry.select.choices = string_to_list(question["options"])
+            entry.select.label = question["questionTitle"]
+            entry.select.id = question["questionID"]
+            entry.select.choices = string_to_list(question["questionOptions"])
             selects.append(entry)
     return selects
 
