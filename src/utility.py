@@ -51,13 +51,13 @@ def create_tables(mysql):
     if res < 1:
         print("Creating survey table...")
         cur.execute(
-            "CREATE TABLE surveys(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyName VARCHAR(100), userID INT(18), creationDate VARCHAR(20), FOREIGN KEY (userID) REFERENCES users(ID))")
+            "CREATE TABLE surveys(managerID INT(18), surveyID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyName VARCHAR(100), surveyCreationDate VARCHAR(20),surveyReleaseDate VARCHAR(20), surveyCompletionDate VARCHAR(20), FOREIGN KEY (managerID) REFERENCES users(ID))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'questions\'")
     if res < 1:
         print("Creating questions table...")
         cur.execute(
-            "CREATE TABLE questions(ID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyID INT(18), questionTitle VARCHAR(100), questionType VARCHAR(100), questionOptions VARCHAR(100), FOREIGN KEY(surveyID) REFERENCES surveys(ID))")
+            "CREATE TABLE questions(questionID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyID INT(18), questionTitle VARCHAR(100), questionType VARCHAR(100), questionOptions VARCHAR(100), FOREIGN KEY(surveyID) REFERENCES surveys(surveyID))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'emails\'")
     if res < 1:
@@ -69,11 +69,11 @@ def create_tables(mysql):
     if res < 1:
         print("Creating response table...")
         cur.execute(
-            "CREATE TABLE responses(ID INT(18) AUTO_INCREMENT PRIMARY KEY, questionID INT(18), response VARCHAR(500), FOREIGN KEY (questionID) REFERENCES questions(ID))")
+            "CREATE TABLE responses(responseID INT(18) AUTO_INCREMENT PRIMARY KEY, questionID INT(18), response VARCHAR(500), FOREIGN KEY (questionID) REFERENCES questions(questionID))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'hashes\'")
     if res < 1:
         print("Creating hashes table...")
-        cur.execute("CREATE TABLE hashes(hash VARCHAR(50) PRIMARY KEY, surveyID INT(18), used BOOLEAN not null default 0, FOREIGN KEY (surveyID) REFERENCES surveys(ID))")
+        cur.execute("CREATE TABLE hashes(hash VARCHAR(50) PRIMARY KEY, surveyID INT(18), used BOOLEAN not null default 0, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID))")
         mysql.connection.commit()
     cur.close()
