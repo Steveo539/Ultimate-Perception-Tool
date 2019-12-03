@@ -5,15 +5,16 @@ from datetime import datetime
 
 from src.access import is_logged_in, is_logged_out
 
-from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company
-from src.emails import email_user
+from src.database_functions import get_questions, create_admin, get_companies, delete_company, add_company, \
+    generate_hash
+from src.emails import email_user, notify_users
 
 from src.form_functions import build_form
 from src.utility import load_database_info, check_unique_user, create_tables, load_email_info
 from src.forms import RegisterForm
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
-mysql = None
+
 
 @app.route("/")
 def index():
@@ -104,13 +105,34 @@ def manage_companies():
     return render_template("management/companies.html", title="Manage Companies", companies=get_companies(mysql))
 
 
-@app.route("/email")
-def test_email():
-    # Will send a test email to the UltimatePerceptionTool@gmail.com account.
-    # DELETE THIS ONCE EMAILS HAVE BEEN FULLY IMPLEMENTED.
-    email_user(2, '123')
-    print('Sent email!')
-    return "Sent."
+@app.route("/forms/send/", methods=["GET", "POST"])
+@app.route("/forms/send/<survey_id>", methods=["GET", "POST"])
+def send_survey(survey_id=-1):
+    """Validates UUID from an employee. If valid will direct employee to the survey associated with the
+    UUID. Otherwise, will redirect employee back to this page with an error message."""
+    message = None
+    error = None
+    if request.method == "POST":
+        survey_id = request.form['survey_id']
+        recipients = request.form["recipients"]
+        try:
+            cur = mysql.connection.cursor()
+            res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s", [int(survey_id), session['user_id']])
+            if res > 0:
+                cur.close()
+                if len(recipients) > 0:
+                    notify_users(mysql, survey_id, session['user_id'], recipients)
+                    message = 'Successfully Notified Employees!'
+                else:
+                    error = 'Please specify email recipients.'
+            else:
+                error = 'Please provide a valid ID to a survey that you have created.'
+        except ValueError:  # Catch if user doesn't provide valid survey ID
+            error = 'Please provide a valid survey ID as a number.'
+
+    if survey_id != -1:  # If user provided a form ID in URL, autofill the form with it.
+        return render_template("survey/send_survey.html", title="Send Survey", form_id=survey_id, message=message, error=error)
+    return render_template("survey/send_survey.html", title="Send Survey", message=message, error=error)
 
 
 @app.route("/forms/")
@@ -127,7 +149,6 @@ def view_library():
 
 @app.route("/forms/validate/", methods=["GET", "POST"])
 @app.route("/forms/validate/<uuid>", methods=["GET", "POST"])
-@is_logged_in
 def validate_uuid(uuid=-1):
     """Validates UUID from an employee. If valid will direct employee to the survey associated with the
     UUID. Otherwise, will redirect employee back to this page with an error message."""

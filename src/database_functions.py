@@ -46,7 +46,7 @@ def generate_hash(mysql, survey):
     cur.execute("INSERT INTO hashes(hash, surveyID) VALUES(%s, %s)", (str(link_hash), survey))
     mysql.connection.commit()
     cur.close()
-    return link_hash
+    return int(link_hash)
 
 
 def create_admin(mysql):
@@ -81,3 +81,23 @@ def add_company(mysql, company):
     cur.execute("INSERT INTO companies(companyName) VALUES(%s)", [company])
     mysql.connection.commit()
     cur.close()
+
+
+def user_id_to_email(mysql, user_id: int):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT email FROM users WHERE ID=%s", [user_id])
+    if res > 0:
+        result = cur.fetchone()
+        cur.close()
+        return result
+    return None
+
+
+def user_id_to_name(mysql, user_id: int):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT username FROM users WHERE ID=%s", [user_id])
+    if res > 0:
+        result = cur.fetchone()
+        cur.close()
+        return result['username']
+    return None
