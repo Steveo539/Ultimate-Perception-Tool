@@ -7,6 +7,8 @@
         <div class="mr-auto navbar-nav"></div>
         <div class="btn-group">
             <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
+            <a href="{{ url_for('validate_uuid') }}" class="btn btn-primary">Take Survey</a>
+
             {% if session.logged_in %}
                 {% if session.username == 'admin' %}
                     <a href="{{ url_for('manage_companies') }}" class="btn btn-primary">Manage Companies</a>
