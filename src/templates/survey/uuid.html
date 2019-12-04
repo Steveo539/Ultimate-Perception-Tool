@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <br/>
+    <div class="container">
+        <h1 class="text-center">Access Survey</h1>
+        <form method="POST" class="form-signin">
+            <div class="form-group">
+                <label for="uuid_input" class="bmd-label-floating">Unique Access Key</label>
+                <input type="text" class="form-control" name="uuid_input"
+                       value="{% if uuid %}{{ uuid }}{% endif %}">
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">Validate</button>
+            {% if error %}
+                <p style="color: darkred" class="text-center">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

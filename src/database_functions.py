@@ -13,7 +13,7 @@ def get_questions(mysql, form_id):
     cur = mysql.connection.cursor()
 
     try:  # If there is an exception with the query, fail silently
-        cur.execute("SELECT * FROM form_%s", [form_id])
+        cur.execute("SELECT * FROM questions WHERE surveyID=%s", [form_id])
     except (MySQLdb.Error, MySQLdb.Warning):
         return ""
 
@@ -24,18 +24,16 @@ def get_questions(mysql, form_id):
 
 def add_question(mysql, form_id, question):
     cur = mysql.connection.cursor()
-    statement = "INSERT INTO form_" + str(form_id)
-    statement += "(type, text, options) VALUES(%s, %s, %s)"
-    cur.execute(statement, (question['type'], question['text'], list_to_string(question['options'])))
+    statement = "INSERT INTO questions " + str(form_id)
+    statement += "(surveyID, questionTitle, questionType, questionOptions) VALUES(%s, %s, %s)"
+    cur.execute(statement, (form_id, question['text'], question['type'], list_to_string(question['options'])))
     mysql.connection.commit()
     cur.close()
 
 
-def remove_question(mysql, form_id, question_id):
+def remove_question(mysql, form_id: int, question_id: int):
     cur = mysql.connection.cursor()
-    statement = "DELETE FROM form_" + str(form_id)
-    statement += " WHERE id=%s"
-    cur.execute(statement, [question_id])
+    cur.execute('DELETE FROM questions WHERE form_id=%s AND question_id=%s', [form_id, question_id])
     mysql.connection.commit()
     cur.close()
 
@@ -46,7 +44,7 @@ def generate_hash(mysql, survey):
     cur.execute("INSERT INTO hashes(hash, surveyID) VALUES(%s, %s)", (str(link_hash), survey))
     mysql.connection.commit()
     cur.close()
-    return link_hash
+    return int(link_hash)
 
 
 def create_admin(mysql):
@@ -81,3 +79,23 @@ def add_company(mysql, company):
     cur.execute("INSERT INTO companies(companyName) VALUES(%s)", [company])
     mysql.connection.commit()
     cur.close()
+
+
+def user_id_to_email(mysql, user_id: int):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT email FROM users WHERE ID=%s", [user_id])
+    if res > 0:
+        result = cur.fetchone()
+        cur.close()
+        return result
+    return None
+
+
+def user_id_to_name(mysql, user_id: int):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT username FROM users WHERE ID=%s", [user_id])
+    if res > 0:
+        result = cur.fetchone()
+        cur.close()
+        return result['username']
+    return None

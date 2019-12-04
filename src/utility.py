@@ -18,6 +18,25 @@ def load_database_info():
     return info
 
 
+def load_email_info():
+    info = {}
+    try:
+        email_config = open('../email.info', 'r')
+    except IOError:
+        print("WARNING: Unable to open 'email.info' file. "
+              "Email functionality will be disabled until a valid file is provided.")
+        return None
+
+    info['host'] = email_config.readline().strip()
+    info['port'] = email_config.readline().strip()
+    info['account'] = email_config.readline().strip()
+    info['password'] = email_config.readline().strip()
+    email_config.close()
+    if len(info.keys()) != 4:  # If we haven't parsed everything, or we parsed too much return error
+        return None
+    return info
+
+
 def list_to_string(l):
     return json.dumps(l)
 
