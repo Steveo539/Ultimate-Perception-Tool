@@ -9,12 +9,12 @@
         {% if surveys %}
             {% for survey in surveys %}
 
-                {{ survey['name'] }}:
+                {{ survey['surveyName'] }}:
                 <a href="{{ url_for('view_form', form_id=survey['id']) }}" class="btn btn-primary btn-raised">View</a>
                 <hr>
             {% endfor %}
         {% else %}
-            {% for i in range(5) %}
+            {% for i in range(0) %}
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">Group Project Survey</h5>
