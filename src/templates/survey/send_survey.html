@@ -8,7 +8,7 @@
             <div class="form-group">
                 <label for="survey_id" class="bmd-label-floating">Survey ID</label>
                 <input type="text" class="form-control" name="survey_id"
-                       value="{% if survey_id %}{{ survey_id }}{% endif %}">
+                       value="{{ form_id }}">
                 <small class="text-muted">This is the numeric ID of the survey that you would like to notify the
                     employees about. (eg: 320)</small>
             </div>
