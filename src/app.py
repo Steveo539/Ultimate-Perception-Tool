@@ -145,7 +145,7 @@ def view_library():
     result = cur.execute("SELECT surveyName, surveyID FROM surveys WHERE managerID=%s", [int(manager_id)])
     manager_surveys = {}
     if result > 0:
-        manager_surveys = cur.fetchmany()
+        manager_surveys = cur.fetchmany(result)
     return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
