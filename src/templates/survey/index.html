@@ -10,7 +10,7 @@
                 {% for survey in surveys %}
                 <div class="card p-3">
                     <blockquote class="blockquote mb-0 card-body">
-                        <p>{{ survey['surveyName'] }}</p>
+                        <p>{{ survey['surveyID'] }}: {{ survey['surveyName'] }}</p>
 
                             <a href="{{ url_for('view_form', form_id=survey['surveyID']) }}" class="btn btn-primary">View
                             Survey</a>
