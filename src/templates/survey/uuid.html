@@ -1,8 +1,12 @@
 {% extends 'layout.html' %}
 
+    {% block styles %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login_page.css') }}">
+    {% endblock %}
+
 {% block body %}
     <br/>
-    <div class="container">
+    <div class="container form-signin">
         <h1 class="text-center">Access Survey</h1>
         <form method="POST" class="form-signin">
             <div class="form-group">
