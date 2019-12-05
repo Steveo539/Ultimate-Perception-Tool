@@ -1,39 +1,33 @@
-import MySQLdb
 import uuid
 from passlib.handlers.sha2_crypt import sha256_crypt
 
 from src.utility import list_to_string
 
 
-def get_questions(mysql, form_id):
-    try:
-        form_id = int(form_id)
-    except ValueError:  # Use this to prevent anything but integers being passed to SQL query
-        return ""
+def create_survey(mysql, survey):
     cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO surveys(surveyName, userID, creationDate) VALUES(%s, %s, %s)", (survey['name'], survey['user'], survey['date']))
+    mysql.connection.commit()
+    cur.close()
 
-    try:  # If there is an exception with the query, fail silently
-        cur.execute("SELECT * FROM questions WHERE surveyID=%s", [form_id])
-    except (MySQLdb.Error, MySQLdb.Warning):
-        return ""
-
+def get_questions(mysql, survey_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM questions WHERE surveyID=%s", [survey_id])
     questions = cur.fetchall()
     cur.close()
     return questions
 
 
-def add_question(mysql, form_id, question):
+def add_question(mysql, survey_id, question):
     cur = mysql.connection.cursor()
-    statement = "INSERT INTO questions " + str(form_id)
-    statement += "(surveyID, questionTitle, questionType, questionOptions) VALUES(%s, %s, %s)"
-    cur.execute(statement, (form_id, question['text'], question['type'], list_to_string(question['options'])))
+    cur.execute("INSERT INTO questions(surveyID, questionTitle, questionType, questionOptions) VALUES(%s, %s, %s, %s)", (survey_id, question['text'], question['type'], list_to_string(question['options'])))
     mysql.connection.commit()
     cur.close()
 
 
-def remove_question(mysql, form_id: int, question_id: int):
+def remove_question(mysql, question_id):
     cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM questions WHERE form_id=%s AND question_id=%s', [form_id, question_id])
+    cur.execute("DELETE FROM questions WHERE ID=%s", [question_id])
     mysql.connection.commit()
     cur.close()
 
