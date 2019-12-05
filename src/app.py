@@ -187,7 +187,9 @@ def validate_uuid(uuid=-1):
                 if result['used'] != 0:  # Don't allow used hashes to be used again.
                     error = 'This access key has already been used!'
                 else:
-                    return redirect(url_for('view_form', form_id=result['surveyID']))
+                    questions = get_questions(mysql, result['surveyID'])
+                    form = build_form(questions)
+                    return render_template("survey/view.html", title="Survey Detail", form=form)
             else:
                 error = 'Invalid access key.'
         except ValueError:
@@ -205,10 +207,15 @@ def create_form():
 
 
 @app.route("/forms/view/<form_id>")
+@is_logged_in
 def view_form(form_id):
+    creator = get_survey_creator(mysql, form_id)
+    if creator is None or session['user_id'] != creator:
+        return redirect(url_for("index"))
+
     questions = get_questions(mysql, form_id)
     form = build_form(questions)
-    return render_template("survey/view.html", title="Survey Detail", form=form)
+    return render_template("survey/view.html", title="Survey Detail", form=form, view_only=True)
 
 
 @app.errorhandler(404)

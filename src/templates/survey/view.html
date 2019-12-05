@@ -60,10 +60,13 @@
                 </div>
             {% endfor %}
         {% endif %}
+
+        {% if not view_only %}
         <p>
             <input type="button" class="btn btn-primary" value="Submit">
             <a class="btn btn-danger" href={{url_for("index")}}>Cancel</a>
         </p>
+        {% endif %}
     </form>
 </div>
 {% endblock %}

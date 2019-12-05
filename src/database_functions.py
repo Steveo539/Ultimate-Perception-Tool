@@ -33,6 +33,15 @@ def remove_question(mysql, question_id):
     cur.close()
 
 
+def get_survey_creator(mysql, survey_id):
+    creator = None
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s", [survey_id])
+    if res > 0:
+        creator = cur.fetchone()['managerID']
+    return creator
+
+
 def generate_hash(mysql, survey):
     link_hash = uuid.uuid1().int
     cur = mysql.connection.cursor()
