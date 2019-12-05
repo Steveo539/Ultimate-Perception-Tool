@@ -24,7 +24,7 @@ def index():
 def test_survey():
 
     cur = mysql.connection.cursor()
-    res = cur.execute("SELECT * FROM surveys WHERE ID=%s", [str(1)])
+    res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s", [str(1)])
     if res > 0:
         cur.close()
         return "Already created survey"
