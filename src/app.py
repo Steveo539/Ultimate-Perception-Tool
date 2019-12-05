@@ -1,16 +1,14 @@
-from flask import Flask, render_template, request, session, redirect, url_for
-from flask_mysqldb import MySQL
-from passlib.handlers.sha2_crypt import sha256_crypt
 from datetime import datetime
 
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_mysqldb import MySQL
+
 from src.access import is_logged_in, is_logged_out
-
 from src.database_functions import *
-from src.emails import email_user, notify_users
-
+from src.emails import notify_users
 from src.form_functions import build_form
-from src.utility import load_database_info, check_unique_user, create_tables, load_email_info
 from src.forms import RegisterForm
+from src.utility import load_database_info, check_unique_user, create_tables, load_email_info
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
