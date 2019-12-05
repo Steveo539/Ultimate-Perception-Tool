@@ -6,9 +6,10 @@ from src.utility import list_to_string
 
 def create_survey(mysql, survey):
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO surveys(surveyName, userID, creationDate) VALUES(%s, %s, %s)", (survey['name'], survey['user'], survey['date']))
+    cur.execute("INSERT INTO surveys(surveyName, managerID, surveyCreationDate) VALUES(%s, %s, %s)", (survey['name'], survey['user'], survey['date']))
     mysql.connection.commit()
     cur.close()
+
 
 def get_questions(mysql, survey_id):
     cur = mysql.connection.cursor()
@@ -27,7 +28,7 @@ def add_question(mysql, survey_id, question):
 
 def remove_question(mysql, question_id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM questions WHERE ID=%s", [question_id])
+    cur.execute("DELETE FROM questions WHERE questionID=%s", [question_id])
     mysql.connection.commit()
     cur.close()
 
