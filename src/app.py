@@ -213,6 +213,11 @@ def view_form(form_id):
     return render_template("survey/view.html", title="Survey Detail", form=form)
 
 
+@app.errorhandler(404)
+def error_404(e):
+    return redirect(url_for("index"))
+
+
 @app.before_first_request
 def handle_setup():
     create_tables(mysql)
