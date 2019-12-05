@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <br/>
+    <div class="container">
+        <h1 class="text-center">Notify Employees</h1>
+        <form method="POST" class="form-signin">
+            <div class="form-group">
+                <label for="survey_id" class="bmd-label-floating">Survey ID</label>
+                <input type="text" class="form-control" name="survey_id"
+                       value="{{ form_id }}">
+                <small class="text-muted">This is the numeric ID of the survey that you would like to notify the
+                    employees about. (eg: 320)</small>
+            </div>
+            <div class="form-group">
+                <label for="recipients" class="bmd-label-floating">Recipients</label>
+                <input type="text" class="form-control" name="recipients">
+                <small class="text-muted">Email addresses of employees, separated by commas (eg: jdoe@gmail.com,wsmith@gmail.com)</small>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">Send Survey</button>
+            {% if message %}
+                <p style="color: green" class="text-center">{{ message }}</p>
+            {% endif %}
+            {% if error %}
+                <p style="color: darkred" class="text-center">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
