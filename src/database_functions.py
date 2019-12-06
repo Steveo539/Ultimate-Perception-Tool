@@ -33,6 +33,15 @@ def remove_question(mysql, question_id):
     cur.close()
 
 
+def handle_response(mysql, response, uuid):
+    cur = mysql.connection.cursor()
+    for answer in response:
+        cur.execute("INSERT INTO responses(questionID, response) VALUES(%s, %s)", (answer, response[answer]))
+    cur.execute("UPDATE hashes SET used = 1 WHERE hash=%s", [uuid])
+    mysql.connection.commit()
+    cur.close()
+
+
 def get_survey_creator(mysql, survey_id):
     creator = None
     cur = mysql.connection.cursor()

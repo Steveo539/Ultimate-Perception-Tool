@@ -208,6 +208,7 @@ def validate_uuid(uuid=-1):
                 cur.close()
                 if result['used'] != 0:  # Don't allow used hashes to be used again.
                     error = 'This access key has already been used!'
+                    return redirect(url_for("validate_uuid"))
                 else:
                     questions = get_questions(mysql, result['surveyID'])
                     form = build_form(questions)
@@ -253,10 +254,19 @@ def submit_survey():
         return redirect(url_for("index"))
 
     if form.validate():
-        # handle response
-        return "Survey Submitted, Thank You"
+        response = {}
+        for pair in request.form:
+            if "csrf" not in pair and "uuid" not in pair:
+                response[pair] = request.form[pair]
+        handle_response(mysql, response, request.form['uuid'])
+        return redirect(url_for("survey_completed"))
     else:
         return render_template("survey/view.html", title="Survey Detail", form=form, uuid=request.form["uuid"], surveyID=survey_id)
+
+
+@app.route("/forms/completed")
+def survey_completed():
+    return render_template("survey/submitted.html")
 
 
 @app.errorhandler(404)
