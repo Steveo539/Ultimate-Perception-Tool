@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<br/>
+<div class="container jumbotron text-center">
+    <h1>User Settings</h1>
+    <hr>
+    <br/>
+    <h3>Change Password</h3>
+    <br/>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="oldpwd">Old Password</label>
+            <input type="password" class="form-control" name="oldpwd" id="oldpwd">
+        </div>
+        <div class="form-group">
+            <label for="newpwd">New Password</label>
+            <input type="password" class="form-control" name="newpwd" id="newpwd">
+        </div>
+        <div class="form-group">
+            <label for="reppwd">Repeat New Password</label>
+            <input type="password" class="form-control" name="reppwd" id="reppwd">
+        </div>
+        <br/>
+        <input type="submit" class="btn btn-primary" value="Change Password">
+        <a href="/" class="btn btn-danger">Go Back</a>
+    </form>
+    <br/>
+</div>
+{% endblock %}

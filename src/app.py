@@ -72,6 +72,28 @@ def register():
     return render_template("authentication/register.html", form=form, title="Register")
 
 
+@app.route("/manage/user", methods=["GET", "POST"])
+@is_logged_in
+def user_settings():
+    if request.method == "POST":
+        old_password_candidate = request.form['oldpwd']
+        new_password = request.form['newpwd']
+        repeat_password = request.form['reppwd']
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM users WHERE ID=%s", [session['user_id']])
+        old_password = cur.fetchone()['password']
+        if sha256_crypt.verify(old_password_candidate, old_password):
+            if new_password == repeat_password:
+                new_password = sha256_crypt.encrypt(str(new_password))
+                cur.execute("UPDATE users SET password = %s WHERE ID=%s", [new_password, session['user_id']])
+                mysql.connection.commit()
+                cur.close()
+                return redirect(url_for("index"))
+        cur.close()
+    return render_template("management/user.html", title="User Settings")
+
+
 @app.route("/login", methods=["GET", "POST"])
 @is_logged_out
 def login():
@@ -192,8 +214,10 @@ def validate_uuid(uuid=-1):
                     return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid, surveyID=result['surveyID'])
             else:
                 error = 'Invalid access key.'
+                return redirect(url_for("validate_uuid"))
         except ValueError:
             error = 'Please provide a valid numeric key.'
+            return redirect(url_for("validate_uuid"))
 
     if uuid != -1:  # If user provided a UUID in URL, autofill the form with it.
         return render_template("survey/uuid.html", title="Validate Survey Access", uuid=uuid, error=error)

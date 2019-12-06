@@ -8,7 +8,7 @@
     <br/>
     <div class="container form-signin">
         <h1 class="text-center">Access Survey</h1>
-        <form method="POST" class="form-signin">
+        <form method="POST" class="form-signin" name="verify_uuid">
             <div class="form-group">
                 <label for="uuid_input" class="bmd-label-floating">Unique Access Key</label>
                 <input type="text" class="form-control" name="uuid_input"
@@ -20,5 +20,8 @@
                 <p style="color: darkred" class="text-center">{{ error }}</p>
             {% endif %}
         </form>
+        {% if uuid %}
+        <script type="text/javascript">window.onload = function(){document.forms['verify_uuid'].submit();}</script>
+        {% endif %}
     </div>
 {% endblock %}
