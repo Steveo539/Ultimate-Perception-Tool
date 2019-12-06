@@ -189,7 +189,7 @@ def validate_uuid(uuid=-1):
                 else:
                     questions = get_questions(mysql, result['surveyID'])
                     form = build_form(questions)
-                    return render_template("survey/view.html", title="Survey Detail", form=form)
+                    return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid, surveyID=result['surveyID'])
             else:
                 error = 'Invalid access key.'
         except ValueError:
@@ -206,16 +206,33 @@ def create_form():
     return render_template("survey/new.html", title="Create New Survey")
 
 
-@app.route("/forms/view/<form_id>")
+@app.route("/forms/view/<survey_id>")
 @is_logged_in
-def view_form(form_id):
-    creator = get_survey_creator(mysql, form_id)
+def view_form(survey_id):
+    creator = get_survey_creator(mysql, survey_id)
     if creator is None or session['user_id'] != creator:
         return redirect(url_for("index"))
 
-    questions = get_questions(mysql, form_id)
+    questions = get_questions(mysql, survey_id)
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form, view_only=True)
+
+
+@app.route("/forms/submit", methods=["POST"])
+def submit_survey():
+    survey_id = request.args.get("survey_id", "")
+    if survey_id == "":
+        return redirect(url_for("index"))
+    questions = get_questions(mysql, survey_id)
+    form = build_form(questions)
+    if "uuid" not in request.form or validate_hash(mysql, request.form["uuid"]):
+        return redirect(url_for("index"))
+
+    if form.validate():
+        # handle response
+        return "Survey Submitted, Thank You"
+    else:
+        return render_template("survey/view.html", title="Survey Detail", form=form, uuid=request.form["uuid"], surveyID=survey_id)
 
 
 @app.errorhandler(404)

@@ -12,7 +12,7 @@
                     <blockquote class="blockquote mb-0 card-body">
                         <p>{{ survey['surveyID'] }}: {{ survey['surveyName'] }}</p>
 
-                            <a href="{{ url_for('view_form', form_id=survey['surveyID']) }}" class="btn btn-primary">View
+                            <a href="{{ url_for('view_form', survey_id=survey['surveyID']) }}" class="btn btn-primary">View
                             Survey</a>
 
                     </blockquote>

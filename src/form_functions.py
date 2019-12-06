@@ -9,6 +9,7 @@ def build_strings(questions):
             entry = StringForm()
             entry.string.label = question["questionTitle"]
             entry.string.id = question["questionID"]
+            entry.string.name = question["questionID"]
             strings.append(entry)
     return strings
 
@@ -20,6 +21,7 @@ def build_integers(questions):
             entry = IntegerForm()
             entry.integer.label = question["questionTitle"]
             entry.integer.id = question["questionID"]
+            entry.integer.name = question["questionID"]
             integers.append(entry)
     return integers
 
@@ -31,6 +33,7 @@ def build_decimals(questions):
             entry = DecimalForm()
             entry.decimal.label = question["questionTitle"]
             entry.decimal.id = question["questionID"]
+            entry.decimal.name = question["questionID"]
             decimals.append(entry)
     return decimals
 
@@ -42,6 +45,7 @@ def build_radios(questions):
             entry = RadioForm()
             entry.radio.label = question["questionTitle"]
             entry.radio.id = question["questionID"]
+            entry.radio.name = str(question["questionID"])
             entry.radio.choices = string_to_list(question["questionOptions"])
             radios.append(entry)
     return radios
@@ -54,6 +58,7 @@ def build_selects(questions):
             entry = SelectForm()
             entry.select.label = question["questionTitle"]
             entry.select.id = question["questionID"]
+            entry.select.name = question["questionID"]
             entry.select.choices = string_to_list(question["questionOptions"])
             selects.append(entry)
     return selects

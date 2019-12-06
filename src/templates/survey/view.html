@@ -19,9 +19,14 @@
 <div class="container jumbotron text-center">
     <h1>Survey</h1>
     <br/>
-    <form action="POST" target="#">
+    <form method="POST" action="{{url_for('submit_survey', survey_id=surveyID)}}">
+        {% if uuid %}
+            <input type="hidden" name="uuid" value="{{uuid}}">
+        {% endif %}
+
         {{ form.csrf_token }}
         {% if form.strings %}
+            {{ form.strings.csrf_token }}
             {% for entry in form.strings.entries %}
                 <div class="form-group">
                 {{ render_field(entry.string, class_="form-control") }}
@@ -30,6 +35,7 @@
         {% endif %}
 
         {% if form.radios %}
+            {{ form.radios.csrf_token }}
             {% for entry in form.radios.entries %}
                 <div class="form-group">
                 {{ render_field(entry.radio, class_="radio-inline") }}
@@ -38,6 +44,7 @@
         {% endif %}
 
         {% if form.integers %}
+            {{ form.integers.csrf_token }}
             {% for entry in form.integers.entries %}
                 <div class="form-group">
                 {{ render_field(entry.integer, class_="form-control") }}
@@ -46,6 +53,7 @@
         {% endif %}
 
         {% if form.decimals %}
+            {{ form.decimals.csrf_token }}
             {% for entry in form.decimals.entries %}
                 <div class="form-group">
                 {{ render_field(entry.decimal, class_="form-control") }}
@@ -54,6 +62,7 @@
         {% endif %}
 
         {% if form.selects %}
+            {{ form.selects.csrf_token }}
             {% for entry in form.selects.entries %}
                 <div class="form-group">
                 {{ render_field(entry.select, class_="form-control") }}
@@ -67,7 +76,7 @@
         </p>
         {% else %}
         <p>
-            <input type="button" class="btn btn-primary" value="Submit">
+            <input type="submit" class="btn btn-primary" value="Submit">
             <a class="btn btn-danger" href={{url_for("index")}}>Cancel</a>
         </p>
         {% endif %}
