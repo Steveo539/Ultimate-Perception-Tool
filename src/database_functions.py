@@ -64,6 +64,7 @@ def validate_hash(mysql, hash):
     cur = mysql.connection.cursor()
     res = cur.execute("SELECT * FROM hashes WHERE hash=%s", [hash])
     if res < 1:
+        cur.close()
         return False
     used = cur.fetchone()['used']
     cur.close()
