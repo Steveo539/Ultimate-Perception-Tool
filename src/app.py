@@ -72,6 +72,28 @@ def register():
     return render_template("authentication/register.html", form=form, title="Register")
 
 
+@app.route("/manage/user", methods=["GET", "POST"])
+@is_logged_in
+def user_settings():
+    if request.method == "POST":
+        old_password_candidate = request.form['oldpwd']
+        new_password = request.form['newpwd']
+        repeat_password = request.form['reppwd']
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM users WHERE ID=%s", [session['user_id']])
+        old_password = cur.fetchone()['password']
+        if sha256_crypt.verify(old_password_candidate, old_password):
+            if new_password == repeat_password:
+                new_password = sha256_crypt.encrypt(str(new_password))
+                cur.execute("UPDATE users SET password = %s WHERE ID=%s", [new_password, session['user_id']])
+                mysql.connection.commit()
+                cur.close()
+                return redirect(url_for("index"))
+        cur.close()
+    return render_template("management/user.html", title="User Settings")
+
+
 @app.route("/login", methods=["GET", "POST"])
 @is_logged_out
 def login():
@@ -186,14 +208,17 @@ def validate_uuid(uuid=-1):
                 cur.close()
                 if result['used'] != 0:  # Don't allow used hashes to be used again.
                     error = 'This access key has already been used!'
+                    return redirect(url_for("validate_uuid"))
                 else:
                     questions = get_questions(mysql, result['surveyID'])
                     form = build_form(questions)
-                    return render_template("survey/view.html", title="Survey Detail", form=form)
+                    return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid, surveyID=result['surveyID'])
             else:
                 error = 'Invalid access key.'
+                return redirect(url_for("validate_uuid"))
         except ValueError:
             error = 'Please provide a valid numeric key.'
+            return redirect(url_for("validate_uuid"))
 
     if uuid != -1:  # If user provided a UUID in URL, autofill the form with it.
         return render_template("survey/uuid.html", title="Validate Survey Access", uuid=uuid, error=error)
@@ -206,16 +231,42 @@ def create_form():
     return render_template("survey/new.html", title="Create New Survey")
 
 
-@app.route("/forms/view/<form_id>")
+@app.route("/forms/view/<survey_id>")
 @is_logged_in
-def view_form(form_id):
-    creator = get_survey_creator(mysql, form_id)
+def view_form(survey_id):
+    creator = get_survey_creator(mysql, survey_id)
     if creator is None or session['user_id'] != creator:
         return redirect(url_for("index"))
 
-    questions = get_questions(mysql, form_id)
+    questions = get_questions(mysql, survey_id)
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form, view_only=True)
+
+
+@app.route("/forms/submit", methods=["POST"])
+def submit_survey():
+    survey_id = request.args.get("survey_id", "")
+    if survey_id == "":
+        return redirect(url_for("index"))
+    questions = get_questions(mysql, survey_id)
+    form = build_form(questions)
+    if "uuid" not in request.form or validate_hash(mysql, request.form["uuid"]):
+        return redirect(url_for("index"))
+
+    if form.validate():
+        response = {}
+        for pair in request.form:
+            if "csrf" not in pair and "uuid" not in pair:
+                response[pair] = request.form[pair]
+        handle_response(mysql, response, request.form['uuid'])
+        return redirect(url_for("survey_completed"))
+    else:
+        return render_template("survey/view.html", title="Survey Detail", form=form, uuid=request.form["uuid"], surveyID=survey_id)
+
+
+@app.route("/forms/completed")
+def survey_completed():
+    return render_template("survey/submitted.html")
 
 
 @app.errorhandler(404)

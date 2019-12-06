@@ -33,6 +33,15 @@ def remove_question(mysql, question_id):
     cur.close()
 
 
+def handle_response(mysql, response, uuid):
+    cur = mysql.connection.cursor()
+    for answer in response:
+        cur.execute("INSERT INTO responses(questionID, response) VALUES(%s, %s)", (answer, response[answer]))
+    cur.execute("UPDATE hashes SET used = 1 WHERE hash=%s", [uuid])
+    mysql.connection.commit()
+    cur.close()
+
+
 def get_survey_creator(mysql, survey_id):
     creator = None
     cur = mysql.connection.cursor()
@@ -49,6 +58,16 @@ def generate_hash(mysql, survey):
     mysql.connection.commit()
     cur.close()
     return int(link_hash)
+
+
+def validate_hash(mysql, hash):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM hashes WHERE hash=%s", [hash])
+    if res < 1:
+        return False
+    used = cur.fetchone()['used']
+    cur.close()
+    return used != 0
 
 
 def create_admin(mysql):

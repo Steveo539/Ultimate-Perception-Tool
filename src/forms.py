@@ -15,6 +15,11 @@ class RegisterForm(FlaskForm):
 class SelectForm(FlaskForm):
     select = SelectField("Placeholder", choices=[])
 
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
+
 
 class SelectFormList(FlaskForm):
     entries = FieldList(FormField(SelectForm))
@@ -22,6 +27,11 @@ class SelectFormList(FlaskForm):
 
 class DecimalForm(FlaskForm):
     decimal = DecimalField("Placeholder")
+
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
 
 
 class DecimalFormList(FlaskForm):
@@ -31,6 +41,11 @@ class DecimalFormList(FlaskForm):
 class IntegerForm(FlaskForm):
     integer = IntegerField("Placeholder")
 
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
+
 
 class IntegerFormList(FlaskForm):
     entries = FieldList(FormField(IntegerForm))
@@ -39,6 +54,11 @@ class IntegerFormList(FlaskForm):
 class RadioForm(FlaskForm):
     radio = RadioField("Placeholder", choices=[])
 
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
+
 
 class RadioFormList(FlaskForm):
     entries = FieldList(FormField(RadioForm))
@@ -46,6 +66,11 @@ class RadioFormList(FlaskForm):
 
 class StringForm(FlaskForm):
     string = StringField("Placeholder")
+
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
 
 
 class StringFormList(FlaskForm):
