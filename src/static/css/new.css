@@ -1,0 +1,40 @@
+.choicesRadio {
+    display: grid;
+}
+
+.col-7.questionContainer.table-borderless {
+    max-height: 70vh; 
+    overflow-y: scroll;
+}
+
+.btn-group.btn-group-lg {
+    display: flex;
+}
+
+.questionMC {
+    border: double;
+    color: green;
+}
+
+.questionRS {
+    border: double;
+    color: green;
+}
+
+.questionSA {
+    border: double;
+    color: green;
+}
+
+.form-control.z-depth-1 {
+    resize: none;
+    border: groove;
+}
+
+#questionType { 
+    text-align: center;
+}
+
+#leftSelectQuestions {
+    text-align: center;
+}
