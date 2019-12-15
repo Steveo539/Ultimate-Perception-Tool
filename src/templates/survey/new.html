@@ -2,133 +2,148 @@
 
 {% block body %}
 
-<script src="{{url_for('static', filename='js/new.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/new.js') }}"></script>
 
-<div class=".container-fluid">
-    <div class="row">
-        <div class="col" id="questionType">
-            <br>
-            <h1>Question Types-</h1>
-        </div>
-        <div class="col-8">
-            <br>
-            <input type="email" class="form-control form-control-lg" placeholder="Enter Title">
-        </div>
-        <div class="col">
-            <br>
-            <button type="button" class="btn btn-raised btn-lg btn-primary">Submit</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm" id="leftSelectQuestions">
-            <br>
-            <br>
-            <h4>Select the question type</h4>
-            <ul class="list-group list-group-mine">
+    <div class="container-fluid">
+        {# Top Header Row#}
+        <div class="row">
+            <div class="col" id="questionType">
+                {#                Add a header to the question type selector here#}
+            </div>
+            <div class="col-8">
                 <br>
-                <button type="button" class="list-group-item active btn-raised" onclick="mcDisplay()">Multiple Choice</button>
+                <input type="email" class="form-control form-control-lg" placeholder="Survey Title">
+            </div>
+            <div class="col">
                 <br>
-                <button type="button" class="list-group-item active btn-raised" onclick="rsDisplay()">Rating Scale</button>
-                <br>
-                <button type="button" class="list-group-item active btn-raised" onclick="shortDisplay()">Short Answer</button>
-                <br>
-            </ul>
+                <button type="button" class="btn btn-raised btn-lg btn-primary">Submit</button>
+            </div>
         </div>
-        <div class="col-7 questionContainer table-borderless">
-            <br>
-            <table class="table">
-                <tr>
-                    <th scope="col">Questions</th>
-                </tr>
-            </table>
-        </div>
-        <div id="multipleChoice" class="col-3" style="display:block;">
-            <br>
-            <h4>Question Creation - Multiple Choice</h4>
-            <form id="myForm">
-                <label class="bmd-label-floating">Enter your Question</label>
-                <input class="form-control" id="mcname" name="mcname">
+
+        <div class="row">
+            <div class="col-sm text-center">
                 <br>
-                <div class="switch">
-                    <label>
-                        <input type="checkbox" id="turnCheckbox">
-                        Click this if you would like users to select multiple choices at once (checkbox)
+                <br>
+                <p class="lead">Select Question Type</p>
+                <ul class="list-group list-group-mine">
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-raised" onclick="mcDisplay()">Multiple
+                        Choice
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-raised" onclick="rsDisplay()">Rating Scale
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-raised" onclick="shortDisplay()">Short
+                        Answer
+                    </button>
+                    <br>
+                </ul>
+            </div>
+            <div class="col-7 questionContainer table-borderless">
+                <br>
+                <table class="table">
+                    <tr>
+                        <th scope="col">Questions</th>
+                    </tr>
+                </table>
+            </div>
+            <div id="multipleChoice" class="col-3" style="display:block;">
+                <br>
+                <p class="h4 text-center">Create Question</p>
+                <p class="h5 text-center">Multiple Choice</p>
+                <form id="myForm">
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="mcname">Question Title</label>
+                        <input class="form-control" id="mcname" name="mcname">
+                    </div>
+                    <br>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" id="turnCheckbox">
+                            Allow Selection of Multiple Options
+                        </label>
+                    </div>
+                    <p>Number of Response Options:</p>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1"
+                               onclick="disableFunction('inlineRadio1')"> 1
                     </label>
-                </div>
-                <p>How many choices would you like?</p>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1" onclick="disableFunction('inlineRadio1')"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2" onclick="disableFunction('inlineRadio2')"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3" onclick="disableFunction('inlineRadio3')"> 3
-                </label>   
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4" onclick="disableFunction('inlineRadio4')"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5" onclick="disableFunction('inlineRadio5')"> 5
-                </label>  
-                <div class="form-group">
-                    <label class="bmd-label-floating">Choice 1</label>
-                    <input class="form-control" id="choice1">
-                </div>
-                <div class="form-group">
-                    <label class="bmd-label-floating">Choice 2</label>
-                    <input class="form-control" id="choice2">
-                </div>
-                <div class="form-group">
-                    <label class="bmd-label-floating">Choice 3</label>
-                    <input class="form-control" id="choice3">
-                </div>
-                <div class="form-group">
-                    <label class="bmd-label-floating">Choice 4</label>
-                    <input class="form-control" id="choice4">
-                </div>
-                <div class="form-group">
-                    <label class="bmd-label-floating">Choice 5</label>
-                    <input class="form-control" id="choice5">
-                </div>
-            </form>
-            <button class="btn btn-default" onclick="clearFormsMC()">Clear</button>
-            <button type="submit" class="btn btn-primary btn-raised" onclick="addRowMC()">Submit</button>
-        </div>
-        <div id="ratingScale" class="col-3" style="display:none;">
-            <br>
-            <h4>Question Creation - Rating Scale</h4>
-            <form>
-                <div class="form-group">
-                    <label for="exampleInputEmail1" class="bmd-label-floating">Enter your Question</label>
-                    <input class="form-control" id="rsname">
-                </div>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2"
+                               onclick="disableFunction('inlineRadio2')"> 2
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3"
+                               onclick="disableFunction('inlineRadio3')"> 3
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4"
+                               onclick="disableFunction('inlineRadio4')"> 4
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5"
+                               onclick="disableFunction('inlineRadio5')" checked> 5
+                    </label>
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="choice1">Choice 1</label>
+                        <input class="form-control" id="choice1">
+                    </div>
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="choice2">Choice 2</label>
+                        <input class="form-control" id="choice2">
+                    </div>
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="choice3">Choice 3</label>
+                        <input class="form-control" id="choice3">
+                    </div>
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="choice4">Choice 4</label>
+                        <input class="form-control" id="choice4">
+                    </div>
+                    <div class="form-group">
+                        <label class="bmd-label-floating" for="choice5">Choice 5</label>
+                        <input class="form-control" id="choice5">
+                    </div>
+                </form>
+                <button class="btn btn-default" onclick="clearFormsMC()">Clear</button>
+                <button type="submit" class="btn btn-primary btn-raised" onclick="addRowMC()">Submit</button>
+            </div>
+            <div id="ratingScale" class="col-3" style="display:none;">
                 <br>
-                <div class="form-group">
-                    <label for="exampleInputPassword1" class="bmd-label-floating">Scale at 1</label>
-                    <input class="form-control" id="scale1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1" class="bmd-label-floating">Scale at 10</label>
-                    <input class="form-control" id="scale10">
-                </div>
-            </form>
-            <button class="btn btn-default" onclick="clearFormsRS()">Clear</button>
-            <button type="submit" class="btn btn-primary btn-raised" onclick="addRowRS()">Submit</button>
-        </div>
-        <div id="shortAnswer" class="col-3" style="display:none;">
-            <br>
-            <h4>Question Creation - Short Answer</h4>
-            <form>
-                <div class="form-group">
-                    <label for="exampleInputEmail1" class="bmd-label-floating">Enter your Question</label>
-                    <input class="form-control" id="saname">
-                </div>
-            </form>
-            <button class="btn btn-default" onclick="clearFormsSA()">Clear</button>
-            <button type="submit" class="btn btn-primary btn-raised" onclick="addRowSA()">Submit</button>
+                <p class="h4 text-center">Create Question</p>
+                <p class="h5 text-center">Rating Scale</p>
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="bmd-label-floating">Enter your Question</label>
+                        <input class="form-control" id="rsname">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1" class="bmd-label-floating">Scale at 1</label>
+                        <input class="form-control" id="scale1">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1" class="bmd-label-floating">Scale at 10</label>
+                        <input class="form-control" id="scale10">
+                    </div>
+                </form>
+                <button class="btn btn-default" onclick="clearFormsRS()">Clear</button>
+                <button type="submit" class="btn btn-primary btn-raised" onclick="addRowRS()">Submit</button>
+            </div>
+            <div id="shortAnswer" class="col-3" style="display:none;">
+                <br>
+                <p class="h4 text-center">Create Question</p>
+                <p class="h5 text-center">Short Answer</p>
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="bmd-label-floating">Enter your Question</label>
+                        <input class="form-control" id="saname">
+                    </div>
+                </form>
+                <button class="btn btn-default" onclick="clearFormsSA()">Clear</button>
+                <button type="submit" class="btn btn-primary btn-raised" onclick="addRowSA()">Submit</button>
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
