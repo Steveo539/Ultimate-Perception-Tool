@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block body %}
-
-    <div class="description">
-        <h1 class="mb-4 text-primary">Ultimate Perception Tool</h1>
-        <h3 class="mb-3 h3 text-secondary">Track Progress</h3>
-        <h3 class="mb-3 h3 text-secondary">Gain Meaningful Insights</h3>
-        <h3 class="mb-5 h3 text-secondary">Obtain Measurable Results</h3>
-        <a href="{{ url_for('about') }}" class="mt-4 btn btn-primary btn-outline btn-elegant btn-lg">Learn More</a>
+<div class="homepage-bg-image">
+    <div class="homepage-overlay">
+        <div class="description">
+            <h1 class="mb-4 text-primary">Ultimate Perception Tool</h1>
+            <h3 class="mb-3 h3 text-secondary">Track Progress</h3>
+            <h3 class="mb-3 h3 text-secondary">Gain Meaningful Insights</h3>
+            <h3 class="mb-5 h3 text-secondary">Obtain Measurable Results</h3>
+            <a href="{{ url_for('about') }}" class="mt-4 btn btn-primary btn-outline btn-elegant btn-lg">Learn More</a>
+        </div>
     </div>
+</div>
 
 {% endblock %}

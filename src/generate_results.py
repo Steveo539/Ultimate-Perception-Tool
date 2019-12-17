@@ -32,6 +32,7 @@ def generate_multiple_choice(data, save=False):
         plt.savefig('books_read.png')
     plt.show()
 
+
 def generate_rating(data, save=False):
     print(range(*data['rating_choice_range']))
     x_axis = tuple(range(*data['rating_choice_range']))
