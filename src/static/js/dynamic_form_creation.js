@@ -5,9 +5,12 @@ questionList = []; //Key-Value pair for questions. Key is UniqueID, Value is Que
 
 //
 // -----------------------
-// Event Handlers For Page
+// Event Handlers For Page + Setup
 // -----------------------
 //
+
+// We disable page scrolling so that the div with questions gets priority
+document.body.style.overflowY = "hidden";
 
 
 //
@@ -39,6 +42,23 @@ function addQuestionMultipleChoice() {
 
     questionList.push(mcQuestion);
     addRowMultipleChoice(mcQuestion);
+}
+
+/**
+ * Adds a specific short answer question to the list, and adds associated required values
+ * such as adding the HTML element, creating the class, and adding to master list of survey fields
+ */
+function addQuestionShortAnswer() {
+    let formValues = formToFieldList('saForm');
+    // Will Return List with the following:
+    // Index 0: Question Title
+
+    let saTitle = formValues[0];
+
+    let saQuestion = new ShortAnswerQuestion(saTitle);
+
+    questionList.push(saQuestion);
+    addRowShortAnswer(saQuestion);
 }
 
 //
@@ -86,17 +106,18 @@ function addRowMultipleChoice(mcQuestion) {
     let list = mcQuestion.optionList;
     for (let index = 0; index < mcQuestion.optionList.length; index++) {
         optionDisplay += `
-        <div class="`+optionType+`">
+        <div class="` + optionType + `">
             <label>
-                <input type="`+optionType+`" disabled>`+ mcQuestion.optionList[index] +`
+                <input type="` + optionType + `" disabled>` + mcQuestion.optionList[index] + `
             </label>
         </div>   
         `;
     }
 
     div.innerHTML = `
+    <hr>
     <div class="lead"><b>` + mcQuestion.title + `</b>
-        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"`+div.id.toString()+`\")'>
+        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
         </button>
     </div>
@@ -106,6 +127,31 @@ function addRowMultipleChoice(mcQuestion) {
 
     document.getElementById('questions').appendChild(div);
 }
+
+/**
+ * Adds a row into the HTML file showing the short answer field which was created.
+ */
+function addRowShortAnswer(saQuestion) {
+    const div = document.createElement('div');
+
+    div.className = 'form';
+    div.id = saQuestion.uuid;
+    div.innerHTML = `
+    <hr>
+    <div class="lead"><b>` + saQuestion.title + `</b>
+        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
+            <i class="material-icons">delete</i>
+        </button>
+    </div>
+    <form>
+        <div class="form-group">
+            <label for="area` + div.id + `" class="bmd-label-floating">Short Answer Response Question</label>
+        </div>
+    </form>`;
+
+    document.getElementById('questions').appendChild(div);
+}
+
 
 /**
  * Removes a given row from the question display section.

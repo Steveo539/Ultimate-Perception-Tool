@@ -49,7 +49,7 @@
 
             {# Row with placeholder question fields#}
             <div class="col-md-9 mt-4">
-                <div class="container" id="questions">
+                <div class="container" id="questions" style="height: 70vh; overflow-y: scroll;">
                 </div>
             </div>
         </div>
@@ -144,7 +144,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <!--
+                    Question Creation Takes Place Here for SA
+                    -->
+
+                    <form id="saForm" action="#" onsubmit="addQuestionShortAnswer();return false">
+                        <div class="form-group">
+                            <label for="saTitle" class="bmd-label-floating">Question Title</label>
+                            <input type="text" id="saTitle" class="form-control" required>
+                        </div>
+                        <input id="saSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
