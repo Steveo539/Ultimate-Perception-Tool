@@ -6,6 +6,7 @@
 
 {% block body %}
     <br/>
+    <div class="container card">
     <form  method="POST" class="form-signin">
         <div class="text-center mb-4">
             <img class="mb-4" src="{{ url_for('static', filename='images/ultimate_software.png') }}" width="190">
@@ -27,4 +28,5 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">Sign in</button>
     </form>
+    </div>
 {% endblock %}
