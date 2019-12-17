@@ -42,7 +42,36 @@ function addQuestionMultipleChoice() {
 
     questionList.push(mcQuestion);
     addRowMultipleChoice(mcQuestion);
+    clearForm('mcForm');
+    $('#mcModal').modal('hide');
 }
+
+/**
+ * Adds a specific rating scale question to the list, and adds associated required values
+ * such as adding the HTML element, creating the class, and adding to master list of survey fields
+ */
+function addQuestionRatingScale() {
+    let formValues = formToFieldList('saForm');
+    // Will Return List with the following:
+    // Index 0: Question Title
+    // Index 1: Minimum Value
+    // Index 2: Maximum Value
+    // Index 3: Minimum Value Label
+    // Index 4: Maximum Value Label
+    let rsTitle = formValues[0];
+    let rsMinV = formValues[1];
+    let rsMaxV = formValues[2];
+    let rsMinL = formValues[3];
+    let rsMaxL = formValues[4];
+
+    let rsQuestion = new RatingScaleQuestion(rsTitle, rsMinV, rsMaxV, rsMinL, rsMaxL);
+
+    questionList.push(rsQuestion);
+    addRowRatingScale(rsQuestion);
+    clearForm('rsForm');
+    $('#rsModal').modal('hide');
+}
+
 
 /**
  * Adds a specific short answer question to the list, and adds associated required values
@@ -59,6 +88,8 @@ function addQuestionShortAnswer() {
 
     questionList.push(saQuestion);
     addRowShortAnswer(saQuestion);
+    clearForm('saForm');
+    $('#saModal').modal('hide');
 }
 
 //
@@ -88,6 +119,24 @@ function formToFieldList(formID) {
 }
 
 /**
+ * Clears all of the text fields in a form, resetting them to blank and
+ * setting all true/false checkboxes to unchecked.
+ * @param formID The ID of the form in HTML
+ */
+function clearForm(formID) {
+    let form = document.getElementById(formID).elements;
+
+    for (let i = 0; i < form.length; i++) {
+        if (form[i].type === 'text') {
+            form[i].value = '';
+        }
+        if (form[i].type === 'checkbox') {
+            form[i].checked = false;
+        }
+    }
+}
+
+/**
  * Adds a row into the HTML file showing the multiple choice field which was created.
  */
 function addRowMultipleChoice(mcQuestion) {
@@ -109,7 +158,7 @@ function addRowMultipleChoice(mcQuestion) {
         <div class="` + optionType + `">
             <input name="` + div.id + index + `" id="` + div.id + index + `" type="` + optionType + `" disabled>
             <label for="` + div.id + index + `">
-            `+ mcQuestion.optionList[index].toString() +`
+            ` + mcQuestion.optionList[index].toString() + `
             </label>
         </div>   
         `;
@@ -123,6 +172,27 @@ function addRowMultipleChoice(mcQuestion) {
         </button>
     </div>
     ` + optionDisplay;
+
+    document.getElementById('questions').appendChild(div);
+}
+
+function addRowRatingScale(rsQuestion) {
+    const div = document.createElement('div');
+
+    div.className = 'form';
+    div.id = rsQuestion.uuid;
+    div.innerHTML = `
+    <hr>
+    <div class="lead"><b>` + rsQuestion.title + `</b>
+        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
+            <i class="material-icons">delete</i>
+        </button>
+    </div>
+    <form>
+        <div class="form-group">
+            <label for="area` + div.id + `" class="bmd-label-floating">Rating Scale</label>
+        </div>
+    </form>`;
 
     document.getElementById('questions').appendChild(div);
 }

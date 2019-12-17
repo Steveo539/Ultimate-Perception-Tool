@@ -66,13 +66,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <form id="mcForm" action="#" onsubmit="addQuestionMultipleChoice();return false">
 
-                    <!--
-                    Question Creation Takes Place Here for MC
-                    -->
+                    <div class="modal-body">
 
-                    <form id="mcForm" action="#" onsubmit="addQuestionMultipleChoice();return false">
+                        <!--
+                        Question Creation Takes Place Here for MC
+                        -->
+
                         <div class="form-group">
                             <label for="mcTitle" class="bmd-label-floating">Question Title</label>
                             <input type="text" id="mcTitle" class="form-control" required>
@@ -95,13 +96,13 @@
                             <label for="option3" class="bmd-label-floating">Option 3</label>
                             <input type="text" class="form-control" id="option3">
                         </div>
+                    </div>
+                    <div class="modal-footer">
                         <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+
+                </form>
+
             </div>
         </div>
     </div>
@@ -117,17 +118,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <form id="rsForm" action="#" onsubmit="addQuestionRatingScale();return false">
+                    <div class="modal-body">
 
-                    <form>
 
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
+                    </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -143,23 +143,23 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <!--
-                    Question Creation Takes Place Here for SA
-                    -->
+                <form id="saForm" action="#" onsubmit="addQuestionShortAnswer();return false">
 
-                    <form id="saForm" action="#" onsubmit="addQuestionShortAnswer();return false">
+                    <div class="modal-body">
+                        <!--
+                        Question Creation Takes Place Here for SA
+                        -->
+
                         <div class="form-group">
                             <label for="saTitle" class="bmd-label-floating">Question Title</label>
                             <input type="text" id="saTitle" class="form-control" required>
                         </div>
-                        <input id="saSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
