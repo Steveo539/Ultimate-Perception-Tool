@@ -9,8 +9,9 @@
     </script>
 
     <br/>
-    <div class="container" id="main">
-        <h1 class="text-center">Notify Employees</h1>
+    <div class="card container" id="main">
+        <div class="card-body">
+        <h5 class="card-title text-center">Notify Employees</h5>
         <form method="POST" class="form-signin">
             <div class="form-group">
                 <label for="name" class="bmd-label-floating">Survey To Send</label>
@@ -38,6 +39,7 @@
                 <p style="color: darkred" class="text-center">{{ error }}</p>
             {% endif %}
         </form>
+        </div>
     </div>
 
 {% endblock %}

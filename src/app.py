@@ -152,6 +152,24 @@ def manage_companies():
     return render_template("management/companies.html", title="Manage Companies", companies=get_companies(mysql))
 
 
+@app.route("/forms/close/<survey_id>", methods=["GET"])
+@is_logged_in
+def close_survey(survey_id):
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s",
+                      [int(survey_id), session['user_id']])
+    if res > 0:
+        current_time = datetime.now()
+        current_time = datetime.strftime(current_time, '%Y-%m-%dT%H:%M')
+        res = cur.execute("UPDATE surveys SET surveyCompletionDate=%s WHERE surveyID=%s",
+                          [current_time, int(survey_id)])
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for("view_library"))
+    else:
+        return redirect(url_for("index"))
+
+
 @app.route("/forms/send/", methods=["GET", "POST"])
 @app.route("/forms/send/<survey_id>", methods=["GET", "POST"])
 def send_survey(survey_id=-1):

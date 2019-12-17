@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/survey_builder.css') }}">
+{% endblock %}
+
 {% block body %}
 
     <script src="{{ url_for('static', filename='js/dynamic_form_creation.js') }}"></script>
@@ -27,6 +31,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <div class="container-fluid">
@@ -196,5 +201,7 @@
             </div>
         </div>
     </div>
+
+
 
 {% endblock %}
