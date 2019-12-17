@@ -107,8 +107,9 @@ function addRowMultipleChoice(mcQuestion) {
     for (let index = 0; index < mcQuestion.optionList.length; index++) {
         optionDisplay += `
         <div class="` + optionType + `">
-            <label>
-                <input type="` + optionType + `" disabled>` + mcQuestion.optionList[index] + `
+            <input name="` + div.id + index + `" id="` + div.id + index + `" type="` + optionType + `" disabled>
+            <label for="` + div.id + index + `">
+            `+ mcQuestion.optionList[index].toString() +`
             </label>
         </div>   
         `;
@@ -121,9 +122,7 @@ function addRowMultipleChoice(mcQuestion) {
             <i class="material-icons">delete</i>
         </button>
     </div>
-    <form>
-    ` + optionDisplay + `
-    </form>`;
+    ` + optionDisplay;
 
     document.getElementById('questions').appendChild(div);
 }
