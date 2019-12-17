@@ -1,5 +1,4 @@
-import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_mysqldb import MySQL
@@ -327,6 +326,9 @@ def view_form(survey_id):
 
 @app.route("/forms/lookup", methods=["GET", "POST"])
 def view_surveys_by_email():
+    if not app.config['EMAIL_ENABLED']:  # If email is not enabled, then we don't notify
+        return "Unable To Complete Action. Email Functionality is not Enabled."
+
     if request.method == 'POST':
         email_address = request.form['email']
         cur = mysql.connection.cursor()
@@ -336,8 +338,10 @@ def view_surveys_by_email():
         survey_list = {}
         if result > 0:
             survey_list = cur.fetchmany(result)
-        return render_template("survey/email_lookup.html", title="Email Lookup", surveys=survey_list, email=email_address)
-    return render_template("survey/email_lookup.html", title="Email Lookup", surveys={}, email='')
+        return render_template("survey/email_lookup.html", title="Email Lookup", surveys=survey_list,
+                               email=email_address, fromaddr=app.config['EMAIL_ACCOUNT'])
+    return render_template("survey/email_lookup.html", title="Email Lookup", surveys={}, email='',
+                           fromaddr=app.config['EMAIL_ACCOUNT'])
 
 
 @is_logged_in
@@ -350,7 +354,8 @@ def view_results(survey_id):
     questions = get_questions(mysql, survey_id)
     final_questions = {}
     for question in questions:
-        if question['questionType'] == 'string' or question['questionType'] == 'integer' or question['questionType'] == 'decimal':
+        if question['questionType'] == 'string' or question['questionType'] == 'integer' or question[
+            'questionType'] == 'decimal':
             responses_raw = get_response(mysql, question['questionID'])
             responses = []
             for response in responses_raw:
