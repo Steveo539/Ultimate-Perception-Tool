@@ -20,7 +20,6 @@ def index():
 
 @app.route("/test_survey")
 def test_survey():
-
     cur = mysql.connection.cursor()
     res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s", [str(1)])
     if res > 0:
@@ -32,8 +31,10 @@ def test_survey():
     create_survey(mysql, survey)
     question1 = {'text': "What is your favorite color?", 'type': "string", 'options': ""}
     question2 = {'text': "What is your favorite number?", 'type': "integer", 'options': ""}
-    question3 = {'text': "What is your favorite letter?", 'type': "radio", 'options': [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
-    question4 = {'text': "What is your favorite sport?", 'type': "select", 'options': [("baseball", "baseball"), ("football", "football"), ("basketball", "basketball")]}
+    question3 = {'text': "What is your favorite letter?", 'type': "radio",
+                 'options': [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
+    question4 = {'text': "What is your favorite sport?", 'type': "select",
+                 'options': [("baseball", "baseball"), ("football", "football"), ("basketball", "basketball")]}
 
     add_question(mysql, 1, question1)
     add_question(mysql, 1, question2)
@@ -64,7 +65,9 @@ def register():
         if res < 1:
             return render_template("authentication/register.html", form=form, title="Register")
 
-        cur.execute("INSERT INTO users(companyID, name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s, %s)", (company, name, username, password, position, email, date_started))
+        cur.execute(
+            "INSERT INTO users(companyID, name, username, password, positionTitle, email, startDate) VALUES(%s, %s, %s, %s, %s, %s, %s)",
+            (company, name, username, password, position, email, date_started))
         mysql.connection.commit()
         cur.close()
         return redirect(url_for("index"))
@@ -162,7 +165,8 @@ def send_survey(survey_id=-1):
         recipients = request.form["recipients"]
         try:
             cur = mysql.connection.cursor()
-            res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s", [int(survey_id), session['user_id']])
+            res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s",
+                              [int(survey_id), session['user_id']])
             if res > 0:
                 cur.close()
                 if len(recipients) > 0:
@@ -176,7 +180,8 @@ def send_survey(survey_id=-1):
             error = 'Please provide a valid survey ID as a number.'
 
     if survey_id != -1:  # If user provided a form ID in URL, autofill the form with it.
-        return render_template("survey/send_survey.html", title="Send Survey", form_id=survey_id, message=message, error=error)
+        return render_template("survey/send_survey.html", title="Send Survey", form_id=survey_id, message=message,
+                               error=error)
     return render_template("survey/send_survey.html", title="Send Survey", message=message, error=error)
 
 
@@ -212,7 +217,8 @@ def validate_uuid(uuid=-1):
                 else:
                     questions = get_questions(mysql, result['surveyID'])
                     form = build_form(questions)
-                    return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid, surveyID=result['surveyID'])
+                    return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid,
+                                           surveyID=result['surveyID'])
             else:
                 error = 'Invalid access key.'
                 return redirect(url_for("validate_uuid"))
@@ -228,6 +234,11 @@ def validate_uuid(uuid=-1):
 @app.route("/forms/new", methods=["GET", "POST"])
 @is_logged_in
 def create_form():
+    if request.method == "POST":
+        title = request.form["surveyTitle"]
+        form_json = request.form["json"]
+
+        return redirect(url_for("view_library"))
     return render_template("survey/new.html", title="Create New Survey")
 
 
@@ -261,7 +272,8 @@ def submit_survey():
         handle_response(mysql, response, request.form['uuid'])
         return redirect(url_for("survey_completed"))
     else:
-        return render_template("survey/view.html", title="Survey Detail", form=form, uuid=request.form["uuid"], surveyID=survey_id)
+        return render_template("survey/view.html", title="Survey Detail", form=form, uuid=request.form["uuid"],
+                               surveyID=survey_id)
 
 
 @app.route("/forms/completed")
