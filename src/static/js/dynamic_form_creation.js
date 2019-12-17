@@ -167,7 +167,7 @@ function addRowMultipleChoice(mcQuestion) {
     div.innerHTML = `
     <hr>
     <div class="lead"><b>` + mcQuestion.title + `</b>
-        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
+        <button type="button" class="btn btn-danger bmd-btn-icon-sm" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
         </button>
     </div>
@@ -208,7 +208,7 @@ function addRowShortAnswer(saQuestion) {
     div.innerHTML = `
     <hr>
     <div class="lead"><b>` + saQuestion.title + `</b>
-        <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
+        <button type="button" class="btn btn-danger bmd-btn-icon-sm" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
         </button>
     </div>
