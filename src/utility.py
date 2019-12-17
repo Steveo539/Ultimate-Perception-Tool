@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 
 def load_database_info():
@@ -17,6 +18,16 @@ def load_database_info():
     db_config.close()
     return info
 
+
+def after_today(t1):
+    if t1 is None:
+        return False
+    t1 = datetime.strptime(t1, '%Y-%m-%dT%H:%M')
+    current_time = datetime.now()
+    if t1 > current_time:
+        return True
+    else:
+        return False
 
 def load_email_info():
     info = {}

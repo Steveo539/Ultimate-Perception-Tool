@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_mysqldb import MySQL
@@ -9,7 +9,7 @@ from src.database_functions import *
 from src.emails import notify_users
 from src.form_functions import build_form
 from src.forms import RegisterForm
-from src.utility import check_unique_user, create_tables, load_database_info, load_email_info
+from src.utility import check_unique_user, create_tables, load_database_info, load_email_info, after_today
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -168,14 +168,28 @@ def send_survey(survey_id=-1):
     error = None
     if request.method == "POST":
         recipients = request.form["recipients"]
+        close_date = request.form["endDate"]
+        release_date = datetime.today().strftime('%Y-%m-%dT%H:%M')
         cur = mysql.connection.cursor()
+        if close_date == '':
+            close_date = (datetime.today() + timedelta(days=1, minutes=1, seconds=1))
+            close_date = close_date.strftime('%Y-%m-%dT%H:%M')
+        else:
+            close_date = datetime.strptime(close_date, '%Y-%m-%dT%H:%M')
+            close_date = close_date.strftime('%Y-%m-%dT%H:%M')
+
         res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s",
                           [int(survey_id), session['user_id']])
         if res > 0:
             cur.close()
             if len(recipients) > 0:
                 notify_users(mysql, survey_id, session['user_id'], recipients)
-                message = 'Successfully Notified Employees!'
+                cur = mysql.connection.cursor()
+                res = cur.execute("UPDATE surveys SET surveyCompletionDate=%s, surveyReleaseDate =%s WHERE surveyID=%s",
+                                  [close_date, release_date, int(survey_id)])
+                mysql.connection.commit()
+                cur.close()
+                return redirect(url_for("view_library"))
             else:
                 error = 'Please specify email recipients.'
         else:
@@ -188,7 +202,8 @@ def send_survey(survey_id=-1):
     else:
         return redirect(url_for("view_library"))
 
-    return render_template("survey/send_survey.html", title="Send Survey", survey_name=survey_name, message=message, error=error)
+    return render_template("survey/send_survey.html", title="Send Survey", survey_name=survey_name, message=message,
+                           error=error)
 
 
 @app.route("/forms/")
@@ -205,9 +220,9 @@ def view_library():
 
     today = datetime.today().strftime('%Y-%m-%d')
     for survey in manager_surveys:
-        if survey['surveyReleaseDate'] != '' and survey['surveyCompletionDate'] != '':
+        if survey['surveyReleaseDate'] is None or survey['surveyCompletionDate'] is None:
             survey['status'] = 'ready_to_send'
-        elif survey['surveyReleaseDate'] > today and survey['surveyCompletionDate'] < today:
+        elif not after_today(survey['surveyReleaseDate']) and after_today(survey['surveyCompletionDate']):
             survey['status'] = 'in_progress'
         else:
             survey['status'] = 'completed'
@@ -259,7 +274,7 @@ def create_form():
 
         # Create survey with given information.
         survey_creation_info = {'name': title, 'user': session['user_id'],
-                                'date': datetime.today().strftime('%Y-%m-%d')}
+                                'date': datetime.now().strftime('%Y-%m-%dT%H:%M')}
         survey_id = create_survey(mysql, survey_creation_info)['surveyID']
 
         for question in data:
@@ -277,7 +292,7 @@ def create_form():
                 add_question(mysql, survey_id, question_data)
             elif question['type'] == 'short_answer':
                 question_data['type'] = 'string'
-                question_data['options'] = []
+                question_data['options'] = ""
                 add_question(mysql, survey_id, question_data)
 
         return redirect(url_for("view_library"))
