@@ -8,7 +8,11 @@
         <a href="#collapse{{question.id}}" data-toggle="collapse" class="btn" role="button">{{ question.title }}</a>
 
         <div class="collapse" id="collapse{{question.id}}">
+            <br/>
             <table class="table table-striped">
+                <tr>
+                    <th>Responses</th>
+                </tr>
                 {% for response in question.responses %}
                     <tr>
                         <td>{{response}}</td>
@@ -18,12 +22,27 @@
         </div>
 
         {% else %}
-            <a href="#collapseimage{{question.id}}" data-toggle="collapse" class="btn" role="button">{{ question.title }}</a>
-            <div class="collapse" id="collapseimage{{question.id}}">
-                <img src="data:;base64,{{question.data}}"/>
+            <a href="#collapseMC{{question.id}}" data-toggle="collapse" class="btn" role="button">{{ question.title }}</a>
+
+            <div class="collapse" id="collapseMC{{question.id}}">
+                <br/>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Option</th>
+                        <th>Number</th>
+                        <th>Percentage</th>
+                    </tr>
+                    {% for response in question.responses %}
+                        <tr>
+                            <td>{{ response.option }}</td>
+                            <td>{{ response.num }}</td>
+                            <td>{{ response.percent }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
-            <p>INSERT PICTURE HERE</p>
         {% endif %}
+        <br/>
     {% endfor %}
 </div>
 

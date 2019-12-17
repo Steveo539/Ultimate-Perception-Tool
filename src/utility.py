@@ -19,6 +19,19 @@ def load_database_info():
     return info
 
 
+def build_mc_data(options):
+    results = []
+    total_sum = 0
+    for num in options.values():
+        total_sum += num
+
+    for option in options.keys():
+        result = {'option': option, 'num': options[option],
+                  'percent': str(round(options[option] / total_sum * 100)) + "%"}
+        results.append(result)
+    return results
+
+
 def after_today(t1):
     if t1 is None:
         return False
@@ -28,6 +41,7 @@ def after_today(t1):
         return True
     else:
         return False
+
 
 def load_email_info():
     info = {}
