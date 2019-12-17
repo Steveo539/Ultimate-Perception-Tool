@@ -8,19 +8,24 @@
         <div class="btn-group">
             <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
             <a href="{{ url_for('validate_uuid') }}" class="btn btn-primary">Take Survey</a>
-
             {% if session.logged_in %}
                 {% if session.username == 'admin' %}
                     <a href="{{ url_for('manage_companies') }}" class="btn btn-primary">Manage Companies</a>
                 {% endif %}
-                <a href="{{ url_for('create_form') }}" class="btn btn-primary">Create Survey</a>
-                {% if email_enabled %}
-                    <a href="{{ url_for('send_survey') }}" class="btn btn-primary">Send Survey</a>
-                {% endif %}
-                <a href="{{ url_for('view_library') }}" class="btn btn-primary">My Surveys</a>
-
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Manage Surverys
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a href="{{ url_for('create_form') }}" class="dropdown-item">Create Survey</a>
+                        {% if email_enabled %}
+                            <a href="{{ url_for('send_survey') }}" class="dropdown-item">Send Survey</a>
+                        {% endif %}
+                        <a href="{{ url_for('view_library') }}" class="dropdown-item">My Surveys</a>
+                    </div>
+                </div>
                 <a href="{{ url_for('user_settings') }}" class="btn btn-primary">Settings</a>
-
                 <a href="{{ url_for('logout') }}" class="btn btn-primary">Sign Out</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In</a>
