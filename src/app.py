@@ -9,7 +9,7 @@ from src.database_functions import *
 from src.emails import notify_users
 from src.form_functions import build_form
 from src.forms import RegisterForm
-from src.utility import load_database_info, check_unique_user, create_tables, load_email_info
+from src.utility import check_unique_user, create_tables, load_database_info, load_email_info
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -167,28 +167,28 @@ def send_survey(survey_id=-1):
     message = None
     error = None
     if request.method == "POST":
-        survey_id = request.form['survey_id']
         recipients = request.form["recipients"]
-        try:
-            cur = mysql.connection.cursor()
-            res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s",
-                              [int(survey_id), session['user_id']])
-            if res > 0:
-                cur.close()
-                if len(recipients) > 0:
-                    notify_users(mysql, survey_id, session['user_id'], recipients)
-                    message = 'Successfully Notified Employees!'
-                else:
-                    error = 'Please specify email recipients.'
+        cur = mysql.connection.cursor()
+        res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s AND managerID=%s",
+                          [int(survey_id), session['user_id']])
+        if res > 0:
+            cur.close()
+            if len(recipients) > 0:
+                notify_users(mysql, survey_id, session['user_id'], recipients)
+                message = 'Successfully Notified Employees!'
             else:
-                error = 'Please provide a valid ID to a survey that you have created.'
-        except ValueError:  # Catch if user doesn't provide valid survey ID
-            error = 'Please provide a valid survey ID as a number.'
+                error = 'Please specify email recipients.'
+        else:
+            error = 'Please provide a valid ID to a survey that you have created.'
 
-    if survey_id != -1:  # If user provided a form ID in URL, autofill the form with it.
-        return render_template("survey/send_survey.html", title="Send Survey", form_id=survey_id, message=message,
-                               error=error)
-    return render_template("survey/send_survey.html", title="Send Survey", message=message, error=error)
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT surveyName FROM surveys WHERE surveyID=%s", [int(survey_id)])
+    if result > 0:
+        survey_name = cur.fetchone()['surveyName']
+    else:
+        return redirect(url_for("view_library"))
+
+    return render_template("survey/send_survey.html", title="Send Survey", survey_name=survey_name, message=message, error=error)
 
 
 @app.route("/forms/")
@@ -196,10 +196,21 @@ def send_survey(survey_id=-1):
 def view_library():
     cur = mysql.connection.cursor()
     manager_id = session['user_id']
-    result = cur.execute("SELECT surveyName, surveyID FROM surveys WHERE managerID=%s", [int(manager_id)])
+    result = cur.execute(
+        "SELECT surveyName, surveyID, surveyReleaseDate, surveyCompletionDate FROM surveys WHERE managerID=%s",
+        [int(manager_id)])
     manager_surveys = {}
     if result > 0:
         manager_surveys = cur.fetchmany(result)
+
+    today = datetime.today().strftime('%Y-%m-%d')
+    for survey in manager_surveys:
+        if survey['surveyReleaseDate'] != '' and survey['surveyCompletionDate'] != '':
+            survey['status'] = 'ready_to_send'
+        elif survey['surveyReleaseDate'] > today and survey['surveyCompletionDate'] < today:
+            survey['status'] = 'in_progress'
+        else:
+            survey['status'] = 'completed'
     return render_template("survey/index.html", title="Survey Home", surveys=manager_surveys)
 
 
@@ -263,11 +274,11 @@ def create_form():
             elif question['type'] == 'rating_scale':
                 question_data['type'] = 'radio'
                 # question_data['options'] =
-                add_question(mysql,survey_id,question_data)
+                add_question(mysql, survey_id, question_data)
             elif question['type'] == 'short_answer':
                 question_data['type'] = 'string'
                 question_data['options'] = []
-                add_question(mysql,survey_id,question_data)
+                add_question(mysql, survey_id, question_data)
 
         return redirect(url_for("view_library"))
     return render_template("survey/new.html", title="Create New Survey")

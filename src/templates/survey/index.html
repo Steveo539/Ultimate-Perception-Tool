@@ -3,23 +3,44 @@
 {% block body %}
     <br/>
     <div class="container">
-        <h1 class="text-center">All Created Surveys</h1>
+        <h1 class="text-center">My Surveys</h1>
         <br/>
         {% if surveys %}
             <div class="card-columns">
-                {% for survey in surveys %}
-                <div class="card p-3">
-                    <blockquote class="blockquote mb-0 card-body">
-                        <p>{{ survey['surveyID'] }}: {{ survey['surveyName'] }}</p>
+            {% for survey in surveys %}
 
-                            <a href="{{ url_for('view_form', survey_id=survey['surveyID']) }}" class="btn btn-primary">View
+                <div class="card p-3 text-center">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <h5 class="card-title text-center">{{ survey['surveyName'] }}</h5>
+                        {% if survey['status'] == 'ready_to_send' %}
+                            <p class="text-center lead" style="color:green">
+                                <b>Ready to Send</b>
+                            </p>
+                            <hr>
+
+                            <a href="{{ url_for('send_survey', survey_id=survey['surveyID']) }}"
+                               class="btn btn-primary">Send Survey</a>
+                        {% elif survey['status'] == 'in_progress' %}
+                            <p class="text-center" style="color:darkorchid">
+                                <b>In Progress</b>
+                            </p>
+                            <hr>
+                        {% else %}
+                            <p class="text-center" style="color:darkred">
+                                <b>Complete</b>
+                            </p>
+                            <hr>
+                            <a href="{{ url_for('send_survey', survey_id=survey['surveyID']) }}"
+                               class="btn btn-primary">View Results</a>
+                        {% endif %}
+                        <a href="{{ url_for('view_form', survey_id=survey['surveyID']) }}" class="btn btn-primary">View
                             Survey</a>
 
                     </blockquote>
                 </div>
-                {% endfor %}
+            {% endfor %}
         {% else %}
             <p class="text-center">You have no surveys.</p>
         {% endif %}
-    </div>
+        </div>
 {% endblock %}
