@@ -1,7 +1,31 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<br/>
+<div class="container">
+    {% for question in questions %}
+        {% if question.type == 'short_answer' %}
+        <a href="#collapse{{question.id}}" data-toggle="collapse" class="btn" role="button">{{ question.title }}</a>
 
+        <div class="collapse" id="collapse{{question.id}}">
+            <table class="table table-striped">
+                {% for response in question.responses %}
+                    <tr>
+                        <td>{{response}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {% else %}
+            <a href="#collapseimage{{question.id}}" data-toggle="collapse" class="btn" role="button">{{ question.title }}</a>
+            <div class="collapse" id="collapseimage{{question.id}}">
+                <img src="data:;base64,{{question.data}}"/>
+            </div>
+            <p>INSERT PICTURE HERE</p>
+        {% endif %}
+    {% endfor %}
+</div>
 
 
 {% endblock %}

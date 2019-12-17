@@ -9,6 +9,7 @@ from src.emails import notify_users
 from src.form_functions import build_form
 from src.forms import RegisterForm
 from src.utility import *
+from src.generate_results import *
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -352,7 +353,7 @@ def view_results(survey_id):
         return redirect(url_for("index"))
 
     questions = get_questions(mysql, survey_id)
-    final_questions = {}
+    final_questions = []
     for question in questions:
         if question['questionType'] == 'string' or question['questionType'] == 'integer' or question[
             'questionType'] == 'decimal':
@@ -360,8 +361,9 @@ def view_results(survey_id):
             responses = []
             for response in responses_raw:
                 responses.append(response['response'])
-            final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'responses': responses}
-            final_questions[question['questionID']] = final_question
+            final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'id': question['questionID'], 'responses': responses}
+            final_questions.append(final_question)
+            print(final_question)
         else:
             options_raw = string_to_list(question['questionOptions'])
             options = {}
@@ -371,7 +373,7 @@ def view_results(survey_id):
             for response in responses:
                 options[response['response']] += 1
             final_question = {'title': question['questionTitle'], 'type': 'multiple_choice', 'optionList': options}
-            print(final_question)
+            #print(generate_multiple_choice(final_question, True))
     return render_template("survey/result.html", title="View Results", questions=final_questions)
 
 

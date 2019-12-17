@@ -30,6 +30,6 @@ def generate_multiple_choice(data, save=False):
     matplotlib.rc('ytick', labelsize=20)
     if (save):
         return plt.savefig('books_read.png')
-    plt.show()
+    #plt.show()
 
-generate_multiple_choice(dummy_multiple_choice_data)
+#generate_multiple_choice(dummy_multiple_choice_data)
