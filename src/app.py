@@ -19,6 +19,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/about")
+def about():
+    return render_template("about.html", title="About Us")
+
+
 @app.route("/test_survey")
 def test_survey():
     cur = mysql.connection.cursor()
