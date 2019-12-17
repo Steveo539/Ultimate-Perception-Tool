@@ -17,7 +17,7 @@
                 <form class="form-inline">
                     <div class="form-group text-left w-75 mr-5">
                         <label for="surveyTitle" class="bmd-label-floating">Survey Title</label>
-                        <input type="text" class="form-control w-100" id="surveyTitle">
+                        <input type="text" class="form-control w-100 form-control-lg" id="surveyTitle">
                     </div>
 
                     <button class="btn btn-primary btn-lg btn-raised">Create Survey</button>
@@ -121,11 +121,41 @@
                 <form id="rsForm" action="#" onsubmit="addQuestionRatingScale();return false">
                     <div class="modal-body">
 
+                        <!--
+                        Question creation for RS takes place here
+                        -->
 
-                    </div>
-                    <div class="modal-footer">
-                        <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
-                    </div>
+                        <div class="form-group">
+                            <label for="rsTitle" class="bmd-label-floating">Question Title</label>
+                            <input type="text" class="form-control" id="rsTitle" required>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="rsMinV" class="bmd-label-floating">Minimum Rating</label>
+                                    <input type="text" class="form-control" id="rsMinV" required>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="rsMaxV" class="bmd-label-floating">Maximum Rating</label>
+                                    <input type="text" class="form-control" id="rsMaxV" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rsMinD" class="bmd-label-floating">Minimum Rating Description</label>
+                            <input type="text" class="form-control" id="rsMinD" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rsMaxD" class="bmd-label-floating">Maximum Rating Description</label>
+                            <input type="text" class="form-control" id="rsMaxD" required>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
+                        </div>
 
                 </form>
             </div>

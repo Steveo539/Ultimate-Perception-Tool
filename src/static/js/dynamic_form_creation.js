@@ -51,7 +51,7 @@ function addQuestionMultipleChoice() {
  * such as adding the HTML element, creating the class, and adding to master list of survey fields
  */
 function addQuestionRatingScale() {
-    let formValues = formToFieldList('saForm');
+    let formValues = formToFieldList('rsForm');
     // Will Return List with the following:
     // Index 0: Question Title
     // Index 1: Minimum Value
@@ -188,11 +188,17 @@ function addRowRatingScale(rsQuestion) {
             <i class="material-icons">delete</i>
         </button>
     </div>
-    <form>
-        <div class="form-group">
-            <label for="area` + div.id + `" class="bmd-label-floating">Rating Scale</label>
+    <div class="row text-center">
+        <div class="col text-left">
+            `+rsQuestion.minLabel+`
         </div>
-    </form>`;
+    
+        <div class="col text-right">
+            `+rsQuestion.maxLabel+`
+        </div>
+    </div>
+    <input type="range" class="custom-range" min="0" max="5" id="` + rsQuestion.uuid + 0 + `">
+    `;
 
     document.getElementById('questions').appendChild(div);
 }
@@ -325,6 +331,8 @@ class RatingScaleQuestion {
         this._minLabel = minLabel;
         this._maxLabel = maxLabel;
         this._uuid = generateUUID();
+        this._min = min;
+        this._max = max;
     }
 
     /**
@@ -349,12 +357,12 @@ class RatingScaleQuestion {
         return this._title;
     }
 
-    get minValue() {
-        return this._minValue;
+    get min() {
+        return this._min;
     }
 
-    get maxValue() {
-        return this._maxValue;
+    get max() {
+        return this._max;
     }
 
     get minLabel() {
