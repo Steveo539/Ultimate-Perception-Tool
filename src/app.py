@@ -363,7 +363,6 @@ def view_results(survey_id):
                 responses.append(response['response'])
             final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'id': question['questionID'], 'responses': responses}
             final_questions.append(final_question)
-            print(final_question)
         else:
             options_raw = string_to_list(question['questionOptions'])
             options = {}
