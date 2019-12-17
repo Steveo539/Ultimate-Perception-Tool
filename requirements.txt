@@ -2,3 +2,4 @@ Flask
 Flask-WTF
 passlib
 Flask-mysqldb
+matplotlib

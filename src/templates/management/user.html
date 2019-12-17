@@ -1,30 +1,33 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<br/>
-<div class="container jumbotron text-center">
-    <h1>User Settings</h1>
-    <hr>
     <br/>
-    <h3>Change Password</h3>
-    <br/>
-    <form method="POST" action="">
-        <div class="form-group">
-            <label for="oldpwd">Old Password</label>
-            <input type="password" class="form-control" name="oldpwd" id="oldpwd">
+    <div class="container card form-signin">
+        <div class="card-body">
+            <div class="text-center text-center">
+                <h1 class="">User Settings</h1>
+                <br/>
+                <h5 class="card-title">Change Password</h5>
+            </div>
+
+            <br/>
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="oldpwd" class="bmd-label-floating">Old Password</label>
+                    <input type="password" class="form-control" name="oldpwd" id="oldpwd">
+                </div>
+                <div class="form-group">
+                    <label for="newpwd" class="bmd-label-floating">New Password</label>
+                    <input type="password" class="form-control" name="newpwd" id="newpwd">
+                </div>
+                <div class="form-group">
+                    <label for="reppwd" class="bmd-label-floating">Repeat New Password</label>
+                    <input type="password" class="form-control" name="reppwd" id="reppwd">
+                </div>
+                <br/>
+                <input type="submit" class="btn btn-primary" value="Change Password">
+                <a href="/" class="btn btn-danger">Go Back</a>
+            </form>
+            <br/>
         </div>
-        <div class="form-group">
-            <label for="newpwd">New Password</label>
-            <input type="password" class="form-control" name="newpwd" id="newpwd">
-        </div>
-        <div class="form-group">
-            <label for="reppwd">Repeat New Password</label>
-            <input type="password" class="form-control" name="reppwd" id="reppwd">
-        </div>
-        <br/>
-        <input type="submit" class="btn btn-primary" value="Change Password">
-        <a href="/" class="btn btn-danger">Go Back</a>
-    </form>
-    <br/>
-</div>
 {% endblock %}

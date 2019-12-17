@@ -1,38 +1,83 @@
 <div class="Navigation">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a href="/" class="navbar-brand">
-            <img src="{{ url_for('static', filename='images/ultimate_software.png') }}" width="110">
-        </a>
-        <div class="mr-auto navbar-nav"></div>
-        <div class="btn-group">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
-            <a href="{{ url_for('validate_uuid') }}" class="btn btn-primary">Take Survey</a>
-            {% if session.logged_in %}
-                {% if session.username == 'admin' %}
-                    <a href="{{ url_for('manage_companies') }}" class="btn btn-primary">Manage Companies</a>
-                {% endif %}
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Manage Surverys
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a href="{{ url_for('create_form') }}" class="dropdown-item">Create Survey</a>
-                        {% if email_enabled %}
-                            <a href="{{ url_for('send_survey') }}" class="dropdown-item">Send Survey</a>
-                        {% endif %}
-                        <a href="{{ url_for('view_library') }}" class="dropdown-item">My Surveys</a>
-                    </div>
-                </div>
-                <a href="{{ url_for('user_settings') }}" class="btn btn-primary">Settings</a>
-                <a href="{{ url_for('logout') }}" class="btn btn-primary">Sign Out</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In</a>
-                <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+    <nav class="nav nav-tabs navbar-light bg-primary">
+        <li class="nav-item">
+            <a href="{{ url_for('index') }}" class="nav-link active">Home</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url_for('validate_uuid') }}" class="nav-link">Take Survey</a>
+        </li>
+        {% if session.logged_in %}
+            {% if session.username == 'admin' %}
+                <li class="nav-item">
+                    <a href="{{ url_for('manage_companies') }}" class="nav-link">Manage Companies</a>
+                </li>
             {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Manage Surveys
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ url_for('create_form') }}">Create Survey</a>
+                    <a class="dropdown-item" href="{{ url_for('view_library') }}">My Survey</a>
+                </div>
+            </li>
 
-        </div>
+            <div class="mr-auto navbar-nav"></div>
+             <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Account
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+                    <a class="dropdown-item" href="{{ url_for('user_settings') }}">Settings</a>
+                </div>
+            </li>
+        {% endif %}
+
+{#        <div class="btn-group">#}
+{#            <a href="{{ url_for('index') }}" class="btn btn-primary">Home</a>#}
+{#            <a href="{{ url_for('validate_uuid') }}" class="btn btn-primary">Take Survey</a>#}
+{#            {% if session.logged_in %}#}
+{#                {% if session.username == 'admin' %}#}
+{#                    <a href="{{ url_for('manage_companies') }}" class="btn btn-primary">Manage Companies</a>#}
+{#                {% endif %}#}
+{#                <div class="dropdown">#}
+{#                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"#}
+{#                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                        Manage Surverys#}
+{#                    </button>#}
+{#                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{#                        <a href="{{ url_for('create_form') }}" class="dropdown-item">Create Survey</a>#}
+{#                        {% if email_enabled %}#}
+{#                            <a href="{{ url_for('send_survey') }}" class="dropdown-item">Send Survey</a>#}
+{#                        {% endif %}#}
+{#                        <a href="{{ url_for('view_library') }}" class="dropdown-item">My Surveys</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <a href="{{ url_for('user_settings') }}" class="btn btn-primary">Settings</a>#}
+{#                <a href="{{ url_for('logout') }}" class="btn btn-primary">Sign Out</a>#}
+{#                <div class="dropdown">#}
+{#                    <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="dropdownMenuButton"#}
+{#                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                        <i class="material-icons">account_circle</i>#}
+{#                    </button>#}
+{#                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{#                        <a href="{{ url_for('create_form') }}" class="dropdown-item">Create Survey</a>#}
+{#                        {% if email_enabled %}#}
+{#                            <a href="{{ url_for('send_survey') }}" class="dropdown-item">Send Survey</a>#}
+{#                        {% endif %}#}
+{#                        <a href="{{ url_for('view_library') }}" class="dropdown-item">My Surveys</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% else %}#}
+{##}
+{#                <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In</a>#}
+{#                <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>#}
+{#            {% endif %}#}
+{##}
+{#        </div>#}
     </nav>
-
 </div>
