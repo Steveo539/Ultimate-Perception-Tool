@@ -179,13 +179,18 @@ function addRowMultipleChoice(mcQuestion) {
     }
 
     div.innerHTML = `
-    <hr>
-    <div class="lead"><b>` + mcQuestion.title + `</b>
-        <button type="button" class="btn btn-danger bmd-btn-icon-sm" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
+    <div class="card">
+    <div class="card-body">
+         <h5 class="card-title">` + mcQuestion.title + `</h5>
+         <div>` + optionDisplay + `</div>
+    </div>
+        <button type="button" class="btn btn-danger bmd-btn-icon-bg" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
         </button>
     </div>
-    ` + optionDisplay;
+    <br>
+    `
+    ;
 
     document.getElementById('questions').appendChild(div);
 }
@@ -196,7 +201,6 @@ function addRowRatingScale(rsQuestion) {
     div.className = 'form';
     div.id = rsQuestion.uuid;
     div.innerHTML = `
-    <hr>
     <div class="lead"><b>` + rsQuestion.title + `</b>
         <button type="button" class="btn btn-danger bmd-btn-icon-sm" onclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
@@ -226,17 +230,23 @@ function addRowShortAnswer(saQuestion) {
     div.className = 'form';
     div.id = saQuestion.uuid;
     div.innerHTML = `
-    <hr>
-    <div class="lead"><b>` + saQuestion.title + `</b>
-        <button type="button" class="btn btn-danger bmd-btn-icon-sm" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">` + saQuestion.title + `</h5>
+                <form>
+                    <div class="form-group">
+                        <label for="area\` + div.id + \`" class="bmd-label-floating">Short Answer Response Question</label>
+                    </div>
+                </form>
+
+        </div>
+                <button type="button" class="btn btn-danger bmd-btn-icon-sm" ondblclick='removeRow(\"` + div.id.toString() + `\")'>
             <i class="material-icons">delete</i>
         </button>
-    </div>
-    <form>
-        <div class="form-group">
-            <label for="area` + div.id + `" class="bmd-label-floating">Short Answer Response Question</label>
         </div>
-    </form>`;
+
+        <br>
+`;
 
     document.getElementById('questions').appendChild(div);
 }
