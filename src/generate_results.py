@@ -29,7 +29,7 @@ def generate_multiple_choice(data, save=False):
     matplotlib.rc('xtick', labelsize=20)
     matplotlib.rc('ytick', labelsize=20)
     if (save):
-        plt.savefig('books_read.png')
+        return plt.savefig('books_read.png')
     plt.show()
 
 
@@ -45,7 +45,7 @@ def generate_rating(data, save=False):
     matplotlib.rc('xtick', labelsize=20)
     matplotlib.rc('ytick', labelsize=20)
     if (save):
-        plt.savefig('books_read.png')
+        return plt.savefig('books_read.png')
     plt.show()
 
 generate_multiple_choice(dummy_multiple_choice_data)
