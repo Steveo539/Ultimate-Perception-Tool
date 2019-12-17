@@ -14,13 +14,15 @@
             </div>
 
             <div class="col-md-9">
-                <form class="form-inline">
+                <form class="form-inline" method="post">
                     <div class="form-group text-left w-75 mr-5">
                         <label for="surveyTitle" class="bmd-label-floating">Survey Title</label>
-                        <input type="text" class="form-control w-100 form-control-lg" id="surveyTitle">
+                        <input type="text" class="form-control w-100 form-control-lg" id="surveyTitle"
+                               name="surveyTitle" required>
                     </div>
 
-                    <button class="btn btn-primary btn-lg btn-raised">Create Survey</button>
+                    <input type="hidden" name="json" id="json">
+                    <button class="btn btn-primary btn-lg btn-raised" onclick="prepareJSON();">Create Survey</button>
                 </form>
             </div>
         </div>
@@ -68,7 +70,7 @@
                 </div>
                 <form id="mcForm" action="#" onsubmit="addQuestionMultipleChoice();return false">
 
-                    <div class="modal-body">
+                    <div class="modal-body" id="mcFormBody">
 
                         <!--
                         Question Creation Takes Place Here for MC
@@ -85,19 +87,17 @@
                             </label>
                         </div>
                         <div class="form-group">
-                            <label for="option1" class="bmd-label-floating">Option 1</label>
-                            <input type="text" class="form-control" id="option1">
+                            <label for="option1">Response Option</label>
+                            <input type="text" class="form-control" id="option1" required>
                         </div>
                         <div class="form-group">
-                            <label for="option2" class="bmd-label-floating">Option 2</label>
-                            <input type="text" class="form-control" id="option2">
-                        </div>
-                        <div class="form-group">
-                            <label for="option3" class="bmd-label-floating">Option 3</label>
-                            <input type="text" class="form-control" id="option3">
+                            <label for="option2">Response Option</label>
+                            <input type="text" class="form-control" id="option2" required>
                         </div>
                     </div>
+
                     <div class="modal-footer">
+                        <a href="#" onclick="addBlankInput();" class="btn btn-sm btn-outline-secondary mr-4">Add Option</a>
                         <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
                     </div>
 
@@ -156,7 +156,7 @@
                         <div class="modal-footer">
                             <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
                         </div>
-
+                    </div>
                 </form>
             </div>
         </div>

@@ -1,7 +1,7 @@
 // Global Variables
 // -----------------------
 questionList = []; //Key-Value pair for questions. Key is UniqueID, Value is Question Content
-
+addedRows = [];
 
 //
 // -----------------------
@@ -44,6 +44,10 @@ function addQuestionMultipleChoice() {
     addRowMultipleChoice(mcQuestion);
     clearForm('mcForm');
     $('#mcModal').modal('hide');
+
+    for (let index = addedRows.length - 1; index >= 0; index--) { // Remove all added rows from the fields
+        removeRow(addedRows[index]);
+    }
 }
 
 /**
@@ -90,6 +94,16 @@ function addQuestionShortAnswer() {
     addRowShortAnswer(saQuestion);
     clearForm('saForm');
     $('#saModal').modal('hide');
+}
+
+function prepareJSON() {
+    let jsonField = document.getElementById('json');
+
+    let jsonList = questionList.map(function (question) {
+        return question.toJson();
+    });
+
+    jsonField.value = JSON.stringify(jsonList);
 }
 
 //
@@ -190,11 +204,11 @@ function addRowRatingScale(rsQuestion) {
     </div>
     <div class="row text-center">
         <div class="col text-left">
-            `+rsQuestion.minLabel+`
+            ` + rsQuestion.minLabel + `
         </div>
     
         <div class="col text-right">
-            `+rsQuestion.maxLabel+`
+            ` + rsQuestion.maxLabel + `
         </div>
     </div>
     <input type="range" class="custom-range" min="0" max="5" id="` + rsQuestion.uuid + 0 + `">
@@ -236,10 +250,19 @@ function removeRow(questionID) {
     questionID = questionID.trim();
     document.getElementById(questionID).remove();
 
-    for (let i = 0; i < questionList.length; i++) {
-        if (questionList[i].uuid === questionID) {
-            questionList.splice(i, 1);
-            break;
+    if (questionID.length < 10) {  //If it is a short ID, we know it is an added row
+        for (let i = 0; i < addedRows.length; i++) {
+            if (addedRows[i] === questionID) {
+                addedRows.splice(i, 1);
+                break;
+            }
+        }
+    } else { // Otherwise it is a question ID
+        for (let i = 0; i < questionList.length; i++) {
+            if (questionList[i].uuid === questionID) {
+                questionList.splice(i, 1);
+                break;
+            }
         }
     }
 }
@@ -254,6 +277,32 @@ function generateUUID() {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
+}
+
+/**
+ * Will create a new blank input for a multiple choice field. This is required in the form, and will
+ * have an associated delete button should you decide to not want the field anymore.
+ */
+function addBlankInput() {
+    const div = document.createElement('div');
+
+    div.className = 'row';
+    div.id = generateUUID().substr(0, 9);
+    div.innerHTML = `
+            <div class="form-group col-8">
+                <label for="\` + div.id + "0" + \`" class="bmd-label-static">Response Option</label>
+                <input type="text" class="form-control" id="\` + div.id + "0" + \`" required>
+            </div>
+            <div class="col-4">
+                <br>
+                <button type="button" class="btn btn-danger bmd-btn-icon" onclick='removeRow(\"` + div.id.toString() + `\")'>
+                    <i class="material-icons">delete</i>
+                </button>
+            </div>
+        `;
+
+    document.getElementById('mcFormBody').appendChild(div);
+    addedRows.push(div.id);
 }
 
 
