@@ -1,85 +1,103 @@
 {% extends 'layout.html' %}
 
 {% macro render_field(field) %}
-  <dt>{{ field.label }}
-  <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
+    <dt>{{ field.label }}
+    <dd>{{ field(**kwargs)|safe }}
+        {% if field.errors %}
+            <ul class=errors>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </dd>
 {% endmacro %}
 
 
+{% block styles %}
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<br/>
-<div class="container jumbotron text-center">
-    <h1>Survey</h1>
     <br/>
-    <form method="POST" action="{{url_for('submit_survey', survey_id=surveyID)}}">
-        {% if uuid %}
-            <input type="hidden" name="uuid" value="{{uuid}}">
-        {% endif %}
+    <div class="card container">
+        <div class="card-body">
+            <p class="h1">{{ name }}</p>
+            {% if not uuid %}
+                <p class="lead" style="color: darkred">Read Only. Results Not Saved.</p>
+            {% endif %}
+            <br/>
+            <form method="POST" action="{{ url_for('submit_survey', survey_id=surveyID) }}">
+                {% if uuid %}
+                    <input type="hidden" name="uuid" value="{{ uuid }}">
+                {% endif %}
 
-        {{ form.csrf_token }}
-        {% if form.strings %}
-            {{ form.strings.csrf_token }}
-            {% for entry in form.strings.entries %}
-                <div class="form-group">
-                {{ render_field(entry.string, class_="form-control") }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                {{ form.csrf_token }}
 
-        {% if form.radios %}
-            {{ form.radios.csrf_token }}
-            {% for entry in form.radios.entries %}
-                <div class="form-group">
-                {{ render_field(entry.radio, class_="radio-inline") }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% if form.strings %}
+                    {{ form.strings.csrf_token }}
+                    {% for entry in form.strings.entries %}
+                        <div class="form-group">
+                            {{ render_field(entry.string, class_="form-control") }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-        {% if form.integers %}
-            {{ form.integers.csrf_token }}
-            {% for entry in form.integers.entries %}
-                <div class="form-group">
-                {{ render_field(entry.integer, class_="form-control") }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% if form.radios %}
+                    {{ form.radios.csrf_token }}
+                    {% for entry in form.radios.entries %}
+                        <div class="form-group">
+                            {{ render_field(entry.radio, class_="radio-inline") }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-        {% if form.decimals %}
-            {{ form.decimals.csrf_token }}
-            {% for entry in form.decimals.entries %}
-                <div class="form-group">
-                {{ render_field(entry.decimal, class_="form-control") }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% if form.integers %}
+                    {{ form.integers.csrf_token }}
+                    {% for entry in form.integers.entries %}
+                        <div class="form-group">
+                            {{ render_field(entry.integer, class_="form-control") }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-        {% if form.selects %}
-            {{ form.selects.csrf_token }}
-            {% for entry in form.selects.entries %}
-                <div class="form-group">
-                {{ render_field(entry.select, class_="form-control") }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% if form.decimals %}
+                    {{ form.decimals.csrf_token }}
+                    {% for entry in form.decimals.entries %}
+                        <div class="form-group">
+                            {{ render_field(entry.decimal, class_="form-control") }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-        {% if view_only %}
-        <p>
-            <a class="btn btn-primary" href={{url_for("view_library")}}>Go Back</a>
-        </p>
-        {% else %}
-        <p>
-            <input type="submit" class="btn btn-primary" value="Submit">
-            <a class="btn btn-danger" href={{url_for("index")}}>Cancel</a>
-        </p>
-        {% endif %}
-    </form>
-</div>
+                {% if form.selects %}
+                    {{ form.selects.csrf_token }}
+                    {% for entry in form.selects.entries %}
+                        <div class="form-group">
+                            {{ render_field(entry.select, class_="form-control") }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if view_only %}
+                    <p>
+                        <a class="btn btn-primary" href={{ url_for("view_library") }}>Go Back</a>
+                    </p>
+                {% else %}
+                    <p>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <a class="btn btn-danger" href={{ url_for("index") }}>Cancel</a>
+                    </p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $('#js input[type=radio]').hide();
+    </script>
 {% endblock %}
