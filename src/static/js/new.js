@@ -1,6 +1,11 @@
 let numberOfChoices = 0;
 let question = 1;
 
+let questionList = [];
+
+/*
+ * Will clear all values in the multiple choice creation form.
+ */
 function clearFormsMC() {
     document.getElementById('mcname').value = "";
     document.getElementById('choice1').value = "";
@@ -10,12 +15,18 @@ function clearFormsMC() {
     document.getElementById('choice5').value = "";
 }
 
+/*
+ * Will clear all values in the rating scale creation form.
+ */
 function clearFormsRS() {
     document.getElementById('rsname').value = "";
     document.getElementById('scale1').value = "";
     document.getElementById('scale10').value = "";
 }
 
+/*
+ * Will clear all values in the short answer creation form.
+ */
 function clearFormsSA() {
     document.getElementById('saname').value = "";
 }
