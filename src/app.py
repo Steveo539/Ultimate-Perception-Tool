@@ -281,8 +281,9 @@ def view_form(survey_id):
         return redirect(url_for("index"))
 
     questions = get_questions(mysql, survey_id)
+    form_name = get_form_name(mysql, survey_id)
     form = build_form(questions)
-    return render_template("survey/view.html", title="Survey Detail", form=form, view_only=True)
+    return render_template("survey/view.html", title="Survey Detail", form=form, name=form_name, view_only=True)
 
 
 @app.route("/forms/submit", methods=["POST"])
