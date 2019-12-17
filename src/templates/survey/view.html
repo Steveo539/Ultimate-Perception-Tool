@@ -17,7 +17,7 @@
 {% block body %}
 <br/>
 <div class="container jumbotron text-center">
-    <h1>Survey</h1>
+    <h1>{{name}}</h1>
     <br/>
     <form method="POST" action="{{url_for('submit_survey', survey_id=surveyID)}}">
         {% if uuid %}

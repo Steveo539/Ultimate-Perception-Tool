@@ -15,6 +15,14 @@ def create_survey(mysql, survey):
     return result
 
 
+def get_form_name(mysql, survey_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM surveys WHERE surveyID=%s", [survey_id])
+    name = cur.fetchone()['surveyName']
+    cur.close()
+    return name
+
+
 def get_questions(mysql, survey_id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM questions WHERE surveyID=%s", [survey_id])

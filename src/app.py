@@ -222,9 +222,10 @@ def validate_uuid(uuid=-1):
                     return redirect(url_for("validate_uuid"))
                 else:
                     questions = get_questions(mysql, result['surveyID'])
+                    form_name = get_form_name(mysql, result['surveyID'])
                     form = build_form(questions)
-                    return render_template("survey/view.html", title="Survey Detail", form=form, uuid=uuid,
-                                           surveyID=result['surveyID'])
+                    return render_template("survey/view.html", title="Take Survey", form=form, uuid=uuid,
+                                           surveyID=result['surveyID'], name=form_name)
             else:
                 error = 'Invalid access key.'
                 return redirect(url_for("validate_uuid"))
