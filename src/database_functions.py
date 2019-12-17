@@ -63,6 +63,14 @@ def get_survey_creator(mysql, survey_id):
     return creator
 
 
+def get_response(mysql, question_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM responses WHERE questionID=%s", [question_id])
+    responses = cur.fetchall()
+    cur.close()
+    return responses
+
+
 def generate_hash(mysql, survey):
     link_hash = uuid.uuid1().int
     cur = mysql.connection.cursor()

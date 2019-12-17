@@ -9,7 +9,7 @@ from src.database_functions import *
 from src.emails import notify_users
 from src.form_functions import build_form
 from src.forms import RegisterForm
-from src.utility import check_unique_user, create_tables, load_database_info, load_email_info, after_today
+from src.utility import *
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
@@ -314,7 +314,27 @@ def view_results(survey_id):
     if creator is None or session['user_id'] != creator:
         return redirect(url_for("index"))
 
-    return render_template("survey/result.html", title="View Results")
+    questions = get_questions(mysql, survey_id)
+    final_questions = {}
+    for question in questions:
+        if question['questionType'] == 'string' or question['questionType'] == 'integer' or question['questionType'] == 'decimal':
+            responses_raw = get_response(mysql, question['questionID'])
+            responses = []
+            for response in responses_raw:
+                responses.append(response['response'])
+            final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'responses': responses}
+            final_questions[question['questionID']] = final_question
+        else:
+            options_raw = string_to_list(question['questionOptions'])
+            options = {}
+            for option in options_raw:
+                options[(option[1])] = 0
+            responses = get_response(mysql, question['questionID'])
+            for response in responses:
+                options[response['response']] += 1
+            final_question = {'title': question['questionTitle'], 'type': 'multiple_choice', 'optionList': options}
+            print(final_question)
+    return render_template("survey/result.html", title="View Results", questions=final_questions)
 
 
 @app.route("/forms/submit", methods=["POST"])
