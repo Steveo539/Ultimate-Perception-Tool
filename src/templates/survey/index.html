@@ -24,6 +24,8 @@
                                 <b>In Progress</b>
                             </p>
                             <hr>
+                            <a href="{{ url_for('close_survey', survey_id=survey['surveyID']) }}"
+                               class="btn btn-danger">Close Survey</a>
                         {% else %}
                             <p class="text-center" style="color:darkred">
                                 <b>Complete</b>
