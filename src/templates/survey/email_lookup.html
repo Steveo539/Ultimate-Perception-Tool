@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <br>
+    <div class="container card">
+        <br>
+        <h1 class="text-center">Survey Email Lookup</h1>
+        <hr>
+        <br>
+        <div class="row">
+            <div class="col-3 border-right">
+                <form method="POST" name="email_search" class="form">
+                    <div class="form-group">
+                        <label for="email" class="bmd-label-floating">Email Address</label>
+                        <input type="text" class="form-control" name="email"
+                               value="{% if email %}{{ email }}{% endif %}">
+                    </div>
+
+                    <button class="btn btn-primary btn-raised" type="submit" value="Submit">Search</button>
+                    {% if error %}
+                        <p style="color: darkred" class="text-center">{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col-9 text-center">
+                <p class="h3">Available Surveys</p>
+                <p class="h5">You must enter the unique survey key to access the survey.</p>
+                <hr>
+                <br>
+                {% if surveys %}
+                    {% for survey in surveys %}
+                        <a href="{{ url_for('validate_uuid') }}">
+                            <p class="lead font-weight-bolder">{{ survey['surveyName'] }}</p>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <p class="lead font-weight-bold" style="color: darkred;">No Surveys Available.</p>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+    </div>
+{% endblock %}

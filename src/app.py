@@ -325,8 +325,23 @@ def view_form(survey_id):
     return render_template("survey/view.html", title="Survey Detail", form=form, name=form_name, view_only=True)
 
 
-@app.route("/forms/result/<survey_id>")
+@app.route("/forms/lookup", methods=["GET", "POST"])
+def view_surveys_by_email():
+    if request.method == 'POST':
+        email_address = request.form['email']
+        cur = mysql.connection.cursor()
+        result = cur.execute(
+            "SELECT surveyName FROM surveys, emails WHERE surveys.surveyID = emails.surveyID AND emails.email=%s",
+            [email_address])
+        survey_list = {}
+        if result > 0:
+            survey_list = cur.fetchmany(result)
+        return render_template("survey/email_lookup.html", title="Email Lookup", surveys=survey_list, email=email_address)
+    return render_template("survey/email_lookup.html", title="Email Lookup", surveys={}, email='')
+
+
 @is_logged_in
+@app.route("/forms/result/<survey_id>")
 def view_results(survey_id):
     creator = get_survey_creator(mysql, survey_id)
     if creator is None or session['user_id'] != creator:

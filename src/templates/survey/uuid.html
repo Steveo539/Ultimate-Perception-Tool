@@ -1,15 +1,15 @@
 {% extends 'layout.html' %}
 
-    {% block styles %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login_page.css') }}">
-    {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_page.css') }}">
+{% endblock %}
 
 {% block body %}
     <br>
     <div class="container card">
-    <br>
+        <br>
         <h1 class="text-center">Access Survey</h1>
-        <form method="POST"  name="verify_uuid">
+        <form method="POST" name="verify_uuid">
             <div class="form-group">
                 <label for="uuid_input" class="bmd-label-floating">Unique Access Key</label>
                 <input type="text" class="form-control" name="uuid_input"
@@ -22,7 +22,12 @@
             {% endif %}
         </form>
         {% if uuid %}
-        <script type="text/javascript">window.onload = function(){document.forms['verify_uuid'].submit();}</script>
+            <script type="text/javascript">window.onload = function () {
+                document.forms['verify_uuid'].submit();
+            }</script>
         {% endif %}
+        <p class="font-weight-light">Not sure if you have a survey? You can use your email address to check at <a
+                href="{{ url_for('view_surveys_by_email') }}">Survey Lookup</a>
+        </p>
     </div>
 {% endblock %}

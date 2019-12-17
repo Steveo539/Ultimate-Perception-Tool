@@ -22,6 +22,10 @@ def notify_users(mysql, survey_id: int, manager_id: int, employee_list_str: str)
     for employee_email in employee_email_list:
         key_for_employee = generate_hash(mysql, survey_id)
         email_user(mysql, employee_email, manager_id, key_for_employee)
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO emails (email, surveyID) VALUES (%s, %s)", [employee_email, int(survey_id)])
+        mysql.connection.commit()
+        cur.close()
 
 
 def email_user(mysql, destination_email: str, manager_id: int, key: int):
@@ -71,8 +75,10 @@ def email_body(mysql, manager_id: int, key: int):
         <body>
             <p>
             Hello, <br> <br>
-            """+user_id_to_name(mysql, manager_id)+""" has sent you a survey to complete!
-            Please use this <a href="""+key_link+""">link</a> to access the survey
+            """+user_id_to_name(mysql, manager_id)+""" has sent you a survey to complete. The results will be completely 
+            anonymous, and no personally identifiable information will be available to your manager. Please use this 
+            <a href="""+key_link+""">link</a> to access the survey. If you are unable to directly access the link, or need
+            to access the survey from another computer, please use this as your unique key: """+str(key)+"""
             <br> <br>
             Thank you.
             </p> 
