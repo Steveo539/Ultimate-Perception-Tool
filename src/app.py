@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from flask import Flask, render_template, request, session, redirect, url_for
@@ -237,6 +238,30 @@ def create_form():
     if request.method == "POST":
         title = request.form["surveyTitle"]
         form_json = request.form["json"]
+        data = json.loads(form_json)
+
+        # Create survey with given information.
+        survey_creation_info = {'name': title, 'user': session['user_id'],
+                                'date': datetime.today().strftime('%Y-%m-%d')}
+        survey_id = create_survey(mysql, survey_creation_info)['surveyID']
+
+        for question in data:
+            question_data = {}
+            question_data['text'] = question['title']
+            if question['type'] == 'multiple_choice':
+                question_data['type'] = 'radio'
+                question_data['options'] = []
+                for option in question['optionList']:
+                    question_data['options'].append((option, option))
+                add_question(mysql, survey_id, question_data)
+            elif question['type'] == 'rating_scale':
+                question_data['type'] = 'radio'
+                # question_data['options'] =
+                add_question(mysql,survey_id,question_data)
+            elif question['type'] == 'short_answer':
+                question_data['type'] = 'string'
+                question_data['options'] = []
+                add_question(mysql,survey_id,question_data)
 
         return redirect(url_for("view_library"))
     return render_template("survey/new.html", title="Create New Survey")

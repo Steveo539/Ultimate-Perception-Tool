@@ -80,12 +80,13 @@
                             <label for="mcTitle" class="bmd-label-floating">Question Title</label>
                             <input type="text" id="mcTitle" class="form-control" required>
                         </div>
-                        <div class="switch">
-                            <label>
-                                <input type="checkbox" id="mcMultiple">
-                                Allow Multiple Options To Be Selected
-                            </label>
-                        </div>
+                        {#                        <div class="switch">#}
+                        {#                            <label>#}
+                        {#                                <input type="checkbox" id="mcMultiple" >#}
+                        {#                                Allow Multiple Options To Be Selected#}
+                        {#                            </label>#}
+                        {#                        </div>#}
+                        <input type="checkbox" id="mcMultiple" hidden>
                         <div class="form-group">
                             <label for="option1">Response Option</label>
                             <input type="text" class="form-control" id="option1" required>
@@ -97,7 +98,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <a href="#" onclick="addBlankInput();" class="btn btn-sm btn-outline-secondary mr-4">Add Option</a>
+                        <a href="#" onclick="addBlankInput();" class="btn btn-sm btn-outline-secondary mr-4">Add
+                            Option</a>
                         <input id="mcSubmit" type="submit" value="Create Question" class="btn btn-outline-primary">
                     </div>
 

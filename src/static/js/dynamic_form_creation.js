@@ -290,8 +290,8 @@ function addBlankInput() {
     div.id = generateUUID().substr(0, 9);
     div.innerHTML = `
             <div class="form-group col-8">
-                <label for="\` + div.id + "0" + \`" class="bmd-label-static">Response Option</label>
-                <input type="text" class="form-control" id="\` + div.id + "0" + \`" required>
+                <label for="` + div.id + "0" + `" class="bmd-label-static">Response Option</label>
+                <input type="text" class="form-control" id="` + div.id + "0" + `" required>
             </div>
             <div class="col-4">
                 <br>

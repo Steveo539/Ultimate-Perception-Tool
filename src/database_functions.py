@@ -8,7 +8,11 @@ def create_survey(mysql, survey):
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO surveys(surveyName, managerID, surveyCreationDate) VALUES(%s, %s, %s)", (survey['name'], survey['user'], survey['date']))
     mysql.connection.commit()
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT surveyID FROM surveys WHERE surveyName=%s AND managerID=%s AND surveyCreationDate=%s", (survey['name'], survey['user'], survey['date']))
+    result = cur.fetchone()
     cur.close()
+    return result
 
 
 def get_questions(mysql, survey_id):
