@@ -1,7 +1,7 @@
 <div class="Navigation">
     <nav class="nav nav-tabs navbar-light bg-primary">
         <li class="nav-item">
-            <a href="{{ url_for('index') }}" class="nav-link active">Home</a>
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
         </li>
         <li class="nav-item">
             <a href="{{ url_for('validate_uuid') }}" class="nav-link">Take Survey</a>
@@ -24,16 +24,15 @@
             </li>
 
             <div class="mr-auto navbar-nav"></div>
+
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Account
+                <a class="nav-link btn-group-sm" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true">Account
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ url_for('user_settings') }}">Settings</a>
                     <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
                 </div>
-
             </li>
         {% else %}
             <div class="mr-auto navbar-nav"></div>
