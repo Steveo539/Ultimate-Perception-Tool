@@ -36,15 +36,10 @@ def test_survey():
     survey = {"name": "Test 1", "user": "1", "date": "1/14/1970"}
     create_survey(mysql, survey)
     question1 = {'text': "What is your favorite color?", 'type': "string", 'options': ""}
-    question2 = {'text': "What is your favorite number?", 'type': "integer", 'options': ""}
-    question3 = {'text': "What is your favorite letter?", 'type': "radio",
-                 'options': [("a", "a"), ("b", "b"), ("c", "c"), ("d", "d")]}
     question4 = {'text': "What is your favorite sport?", 'type': "select",
                  'options': [("baseball", "baseball"), ("football", "football"), ("basketball", "basketball")]}
 
     add_question(mysql, 1, question1)
-    add_question(mysql, 1, question2)
-    add_question(mysql, 1, question3)
     add_question(mysql, 1, question4)
     return "Created survey"
 
@@ -310,6 +305,16 @@ def view_form(survey_id):
     form_name = get_form_name(mysql, survey_id)
     form = build_form(questions)
     return render_template("survey/view.html", title="Survey Detail", form=form, name=form_name, view_only=True)
+
+
+@app.route("/forms/result/<survey_id>")
+@is_logged_in
+def view_results(survey_id):
+    creator = get_survey_creator(mysql, survey_id)
+    if creator is None or session['user_id'] != creator:
+        return redirect(url_for("index"))
+
+    return render_template("survey/result.html", title="View Results")
 
 
 @app.route("/forms/submit", methods=["POST"])

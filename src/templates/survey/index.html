@@ -8,7 +8,6 @@
         {% if surveys %}
             <div class="card-columns">
             {% for survey in surveys %}
-
                 <div class="card p-3 text-center">
                     <blockquote class="blockquote mb-0 card-body">
                         <h5 class="card-title text-center">{{ survey['surveyName'] }}</h5>
@@ -30,7 +29,7 @@
                                 <b>Complete</b>
                             </p>
                             <hr>
-                            <a href="{{ url_for('send_survey', survey_id=survey['surveyID']) }}"
+                            <a href="{{ url_for('view_results', survey_id=survey['surveyID']) }}"
                                class="btn btn-primary">View Results</a>
                         {% endif %}
                         <a href="{{ url_for('view_form', survey_id=survey['surveyID']) }}" class="btn btn-primary">View
