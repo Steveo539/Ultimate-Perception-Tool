@@ -242,11 +242,13 @@ def validate_uuid(uuid=-1):
                     questions = get_questions(mysql, result['surveyID'])
                     form_name = get_form_name(mysql, result['surveyID'])
 
-                    cur = mysql.connection.cursor()
-                    output = cur.execute("SELECT surveyCompletionDate FROM surveys WHERE surveyID=%s",
+                    cur2 = mysql.connection.cursor()
+                    output = cur2.execute("SELECT surveyCompletionDate FROM surveys WHERE surveyID=%s",
                                          [int(result['surveyID'])])
                     if output > 0:
-                        completeDate = output.fetchone()
+                        completeDate = cur2.fetchone()['surveyCompletionDate']
+
+                        cur.close()
                         if not after_today(completeDate):
                             error = 'Survey Has Closed.'
                         else:
