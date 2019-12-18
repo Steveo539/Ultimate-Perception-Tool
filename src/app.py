@@ -9,7 +9,6 @@ from src.emails import notify_users
 from src.form_functions import build_form
 from src.forms import RegisterForm
 from src.utility import *
-from src.generate_results import *
 
 app = Flask(__name__, static_url_path='', static_folder='static/', template_folder='templates/')
 
