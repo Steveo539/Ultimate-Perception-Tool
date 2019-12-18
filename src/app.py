@@ -23,26 +23,6 @@ def about():
     return render_template("about.html", title="About Us")
 
 
-@app.route("/test_survey")
-def test_survey():
-    cur = mysql.connection.cursor()
-    res = cur.execute("SELECT * FROM surveys WHERE surveyID=%s", [str(1)])
-    if res > 0:
-        cur.close()
-        return "Already created survey"
-    cur.close()
-
-    survey = {"name": "Test 1", "user": "1", "date": "1/14/1970"}
-    create_survey(mysql, survey)
-    question1 = {'text': "What is your favorite color?", 'type': "string", 'options': ""}
-    question4 = {'text': "What is your favorite sport?", 'type': "select",
-                 'options': [("baseball", "baseball"), ("football", "football"), ("basketball", "basketball")]}
-
-    add_question(mysql, 1, question1)
-    add_question(mysql, 1, question4)
-    return "Created survey"
-
-
 @app.route("/register", methods=["GET", "POST"])
 @is_logged_out
 def register():
