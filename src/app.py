@@ -371,7 +371,7 @@ def view_results(survey_id):
             responses = get_response(mysql, question['questionID'])
             for response in responses:
                 options[response['response']] += 1
-            final_question = {'title': question['questionTitle'], 'type': 'multiple_choice', 'responses': build_mc_data(options)}
+            final_question = {'title': question['questionTitle'], 'type': 'multiple_choice', 'id': question['questionID'], 'responses': build_mc_data(options)}
             final_questions.append(final_question)
     return render_template("survey/result.html", title="View Results", questions=final_questions)
 
