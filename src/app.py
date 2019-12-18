@@ -261,9 +261,18 @@ def validate_uuid(uuid=-1):
                 else:
                     questions = get_questions(mysql, result['surveyID'])
                     form_name = get_form_name(mysql, result['surveyID'])
-                    form = build_form(questions)
-                    return render_template("survey/view.html", title="Take Survey", form=form, uuid=uuid,
-                                           surveyID=result['surveyID'], name=form_name)
+
+                    cur = mysql.connection.cursor()
+                    output = cur.execute("SELECT surveyCompletionDate FROM surveys WHERE surveyID=%s",
+                                         [int(result['surveyID'])])
+                    if output > 0:
+                        completeDate = output.fetchone()
+                        if not after_today(completeDate):
+                            error = 'Survey Has Closed.'
+                        else:
+                            form = build_form(questions)
+                            return render_template("survey/view.html", title="Take Survey", form=form, uuid=uuid,
+                                                   surveyID=result['surveyID'], name=form_name)
             else:
                 error = 'Invalid access key.'
                 return redirect(url_for("validate_uuid"))
@@ -360,7 +369,8 @@ def view_results(survey_id):
             responses = []
             for response in responses_raw:
                 responses.append(response['response'])
-            final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'id': question['questionID'], 'responses': responses}
+            final_question = {'title': question['questionTitle'], 'type': 'short_answer', 'id': question['questionID'],
+                              'responses': responses}
             final_questions.append(final_question)
         else:
             options_raw = string_to_list(question['questionOptions'])
@@ -370,7 +380,8 @@ def view_results(survey_id):
             responses = get_response(mysql, question['questionID'])
             for response in responses:
                 options[response['response']] += 1
-            final_question = {'title': question['questionTitle'], 'type': 'multiple_choice', 'id': question['questionID'], 'responses': build_mc_data(options)}
+            final_question = {'title': question['questionTitle'], 'type': 'multiple_choice',
+                              'id': question['questionID'], 'responses': build_mc_data(options)}
             final_questions.append(final_question)
     return render_template("survey/result.html", title="View Results", questions=final_questions)
 

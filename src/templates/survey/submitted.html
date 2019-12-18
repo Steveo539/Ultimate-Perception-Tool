@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Survey Submitted</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-material-design.css') }}">
+{% extends 'layout.html' %}
 
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/material_colors.css') }}">
-    </head>
-    <body>
-    <br/>
-        <div class="container jumbotron text-center">
-            <h1>Survey Submitted</h1>
-            <h3>Thank You!</h3>
-            <br/>
-            <a href="/" class="btn btn-primary">Go Home</a>
-        </div>
-    {% include 'partial/_scripts.html' %}
-    {% include 'partial/_footer.html' %}
-    </body>
-</html>
+{% block body %}
+    <br>
+    <div class="container card text-center">
+        <br>
+        <br>
+        <h1>Survey Submitted</h1>
+        <h3>Thank You!</h3>
+        <br/>
+        <br>
+        <a href="/" class="btn btn-primary btn-outline-primary">Go Home</a>
+        <br>
+    </div>
+{% endblock %}
