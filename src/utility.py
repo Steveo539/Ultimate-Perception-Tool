@@ -25,10 +25,16 @@ def build_mc_data(options):
     for num in options.values():
         total_sum += num
 
-    for option in options.keys():
-        result = {'option': option, 'num': options[option],
-                  'percent': str(round(options[option] / total_sum * 100)) + "%"}
-        results.append(result)
+    if total_sum == 0:
+        for option in options.keys():
+            result = {'option': option, 'num': options[option],
+                      'percent': "0%"}
+            results.append(result)
+    else:
+        for option in options.keys():
+            result = {'option': option, 'num': options[option],
+                      'percent': str(round(options[option] / total_sum * 100)) + "%"}
+            results.append(result)
     return results
 
 
