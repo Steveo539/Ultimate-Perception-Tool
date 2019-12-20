@@ -107,7 +107,7 @@ def create_tables(mysql):
     if res < 1:
         print("Creating questions table...")
         cur.execute(
-            "CREATE TABLE questions(questionID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyID INT(18), questionTitle VARCHAR(100), questionType VARCHAR(100), questionOptions VARCHAR(400), FOREIGN KEY(surveyID) REFERENCES surveys(surveyID))")
+            "CREATE TABLE questions(questionID INT(18) AUTO_INCREMENT PRIMARY KEY, surveyID INT(18), questionTitle VARCHAR(500), questionType VARCHAR(50), questionOptions VARCHAR(800), FOREIGN KEY(surveyID) REFERENCES surveys(surveyID))")
         mysql.connection.commit()
     res = cur.execute("SHOW TABLES LIKE \'emails\'")
     if res < 1:
